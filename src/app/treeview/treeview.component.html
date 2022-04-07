@@ -1,0 +1,275 @@
+<div #divScroll style="width: 100%; height: 100%; overflow: auto; padding-bottom: 20px;">
+  <div style="height: auto; white-space: nowrap; font-size: 12px;">
+    <ul *ngIf="visibile && brani">
+      <li *ngFor="let artista of brani; index as i;">
+        <span style="cursor: pointer; margin-left: 5px;" (click)="visibile[i][0] = !visibile[i][0]">
+          <img *ngIf="!visibile[i][0]" src="assets/immagini/menu.png" width="20px" height="20px">
+          <img *ngIf="visibile[i][0]" src="assets/immagini/menu_aperto.png" width="20px" height="20px">
+          &nbsp;
+        </span>
+        <span [style.color]="visibile[i][0] === true ? '#80ff60' : 'white'" 
+          style="cursor: pointer;"
+          title="{{ artista.text }}"
+          [attr.id]="prendeNomeSistemato(artista.text)">
+          <img *ngIf="Amministratore == 'S'" src="assets/immagini/AggiornaConcorso.png" title="Imposta Tags Artista" style="cursor: pointer; width: 20px; height: 20px;" (click)="impostaTagArtista(artista.text)">
+          &nbsp;{{ artista.text }}
+        </span>
+        <ul>
+          <span *ngIf="visibile[i][0]">
+            <li *ngFor="let album of artista.children; index as j;">
+              <span *ngIf="mostraBrani" style="cursor: pointer; margin-left: 15px;" (click)="visibile[i][j + 1] = !visibile[i][j + 1]">
+                <img *ngIf="!visibile[i][j + 1]" src="assets/immagini/menu.png" width="20px" height="20px">
+                <img *ngIf="visibile[i][j + 1]" src="assets/immagini/menu_aperto.png" width="20px" height="20px">
+                &nbsp;
+              </span>
+              <span *ngIf="mostraBrani" 
+                style="cursor: pointer;"
+                title="{{ album.anno }} - {{ album.text }}"
+                [style.color]="visibile[i][j + 1] === true ? '#80ff60' : 'white'">
+                <!-- <img src="assets/immagini/AggiornaConcorso.png" title="Imposta Tags Album" style="cursor: pointer; width: 20px; height: 20px;" (click)="impostaTagArtistaAlbum(artista.text, album.text)">
+                &nbsp; -->
+                {{ album.anno }} - {{ album.text }}
+              </span>
+              <span *ngIf="!mostraBrani" style="cursor: pointer; margin-left: 35px; font-size: 13px;" 
+                title="{{ album.anno }} - {{ album.text }}"
+                [style.color]="visibile[i][j + 1] === true ? '#80ff60' : 'white'" (click)="clickatoAlbum(i, j)">
+                <!-- <img src="assets/immagini/AggiornaConcorso.png" title="Imposta Tags Album" style="cursor: pointer; width: 20px; height: 20px;" (click)="impostaTagArtistaAlbum(artista.text, album.text)">
+                &nbsp; -->
+                {{ album.Anno }} - {{ album.text }}
+              </span>
+              <ul *ngIf="mostraBrani">
+                <span *ngIf="visibile[i][j + 1]">
+                  <li *ngFor="let brano of album.children; index as k;">
+                    <span style="cursor: pointer;"
+                      [style.color]="brano.id === numeroBrano ? '#ffeb00' : brano.locale == true ? '#95fbf2' : 'white'"
+                      [style.background-color]="brano.id === numeroBrano ? '#ddd' : 'transparent'"
+                    >
+                      <div style="height: 25px; margin-left: 45px; overflow: hidden; width: calc(100% - 40px);">
+                        <!-- <div [style.width]="brano.locale === false ? 'calc(100% - 105px)' : 'calc(100% - 125px)'" -->
+                        <div (mouseover)="aprePopup($event, prendeTesto(brano, artista.text, album.anno + '-' + album.text))" (mouseleave)="posY = -1000"
+                          style="float: left; overflow: hidden; width: 100%;">
+                          <!-- title="{{brano.traccia}}-{{brano.text}}" -->
+                          <span (click)="numeroBrano = brano.id; suSSD = brano.locale; caricaBrano();">
+                            {{brano.traccia}}-{{ brano.text }}
+                            &nbsp;<img *ngIf="deviceGirante == 'Android'" src="assets/immagini/icona_info.png" width="25px" height="25px" (click)="mostraInfos(brano, artista.text, album.anno + '-' + album.text)">
+                          </span>
+                        </div>
+                        <!-- <div style="width: 20px; float: left; text-align: center;">
+                          <img *ngIf="brano.locale === true" src="assets/immagini/icona_SALVA.png" title="Brano locale" style="cursor: pointer; width: 20px; height: 20px;">
+                        </div>
+                        <div style="width: 35px; float: left; text-align: center;">
+                          <img *ngIf="brano.locale === false" src="assets/immagini/preferito.png" title="Bellezza" style="cursor: pointer; width: 20px; height: 20px;"><span *ngIf="brano.locale === false">{{brano.stelle}}&nbsp;</span>
+                        </div>
+                        <div style="width: 35px; float: left; text-align: center;">
+                          <img *ngIf="brano.locale === false" src="assets/immagini/ascoltata.png" title="Ascoltata" style="cursor: pointer; width: 20px; height: 15px;"><span *ngIf="brano.locale === false">{{brano.ascoltata}}</span>
+                        </div>
+                        <div style="width: 35px; float: left; text-align: center;">
+                          <img *ngIf="brano.locale === true" title="Brano in locale" src="assets/immagini/hd4.png" style="cursor: pointer; width: 20px; height: 15px;">
+                        </div>
+                        <div style="width: 35px; float: left; text-align: center;">
+                          <img *ngIf="brano.tags != '-'" src="assets/immagini/icona_info.png" title="Tags" style="cursor: pointer; width: 20px; height: 20px;" (click)="mostraTag(brano)">
+                          <span *ngIf="brano.tags == '-'">&nbsp;</span>
+                        </div> -->
+                      </div>
+                      <div style="clear: both;"></div>
+                    </span>
+                  </li>
+                </span>
+              </ul>
+            </li>
+          </span>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="fMostraTag == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+    position: fixed;
+    width: auto;
+    max-width: 50%;
+    height: auto;
+    z-index: 9999;
+    left: 50%;
+    min-width: 150px;
+    transform: translateX(-50%);
+    top: 35%;
+    padding: 5px;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid #999;
+    text-align: left;">
+  
+  <!-- <table style="margin-top: 25px; width: 100%;" cellapdding="0px" cellspacing="0px">
+    <tr *ngFor="let tag of tagsBrano; index as j;">
+      <td style="text-align: left;">
+        {{tag.Tag}}
+      </td>
+    </tr>
+  </table> -->
+  <div style="width: 100%; padding-top: 20px;"   
+    [innerHtml]="testoPopup"
+    >
+  </div>
+
+  <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+    <div style="width: calc(100% - 30px); float: left; font-weight: bold;">
+      Tags Brano
+    </div>
+    <div style="width: 30px; float: left; text-align: right;">
+      <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="fMostraTag = false">
+    </div>
+  </div>
+</div>
+
+<div *ngIf="fMostraTagArtista == true" style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+  position: fixed;
+  width: auto;
+  max-width: 50%;
+  height: auto;
+  min-width: 150px;
+  z-index: 9999;
+  left: 35%;
+  transform: translateX(-50%);
+  top: 35%;
+  padding: 5px;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 3px;
+  border: 1px solid #999;
+  text-align: center;">
+  
+  <table style="margin-top: 25px; width: 100%;" cellapdding="0px" cellspacing="0px">
+    <tr *ngFor="let tag of tagsArtista; index as j;">
+      <td>
+        <img *ngIf="Amministratore == 'S'" title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTagArtista(tag.idTag)" style="cursor: pointer; width: 25px; height: 25px;">
+      </td>
+      <td style="text-align: left;">
+        {{tag.Tag}}
+      </td>
+    </tr>
+    <tr style="text-align: left;">
+      <td colspan="3">
+        <img *ngIf="Amministratore == 'S'" title="Aggiungi tag" src="assets/immagini/icona_CERCA.png" (click)="aggiungeTagArtista()" style="cursor: pointer; width: 25px; height: 25px;">
+        <img *ngIf="Amministratore == 'S'" title="Refresh tag" src="assets/immagini/icona_REFRESH.png" (click)="refreshTagArtista()" style="cursor: pointer; width: 25px; height: 25px;">
+      </td>
+    </tr>
+  </table>
+
+  <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+    <div style="width: calc(100% - 30px); float: left; font-weight: bold;">
+      Tags Artista
+    </div>
+    <div style="width: 30px; float: left; text-align: right;">
+      <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="fMostraTagArtista = false">
+    </div>
+  </div>
+</div>
+
+<!-- Finestra tags [handle]="handleTV" -->
+<div *ngIf="mostraAggiungeTag == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+    position: fixed;
+    width: auto;
+    max-width: 50%;
+    height: auto;
+    z-index: 9999;
+    left: 60%;
+    transform: translateX(-50%);
+    transform: translateY(-50%);
+    max-height: 80%;
+    top: 50%;
+    padding: 5px;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid #999;
+    text-align: center;">
+
+  <div style="width: 100%; max-height: 400px; overflow: auto; margin-top: 20px;">
+    <table style="width: 100%;" cellapdding="0px" cellspacing="0px">
+      <tr>
+        <th>
+        </th>
+        <th>
+        </th>
+        <th>
+          ID
+        </th>
+        <th>
+          Tag
+        </th>
+      </tr>
+      <tr *ngFor="let tag of listaTagsVisualizzati; index as j;">
+        <td>
+          <img *ngIf="Amministratore == 'S'" title="Seleziona tag" src="assets/immagini/matitadx.png" (click)="selezionaTag(tag.idTag, tag.Tag)" style="cursor: pointer; width: 25px; height: 25px;">
+        </td>
+        <td>
+          <img *ngIf="Amministratore == 'S'" title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTagDaLista(tag.idTag)" style="cursor: pointer; width: 25px; height: 25px;">
+        </td>
+        <td>
+          {{tag.idTag}}
+        </td>
+        <td>
+          {{tag.Tag}}
+        </td>
+      </tr>
+      <tr *ngIf="Amministratore == 'S'" >
+        <td colspan="4"><hr /></td>
+      </tr>
+      <tr *ngIf="Amministratore == 'S'" style="text-align: left;">
+        <td colspan="1">
+          <span style="font-weight: bold;">Tag</span>
+        </td>
+        <td colspan="3">
+          <input type="text" [(ngModel)]="nuovoTag" style="width: 100%; min-width: 250px;">
+        </td>
+      </tr>
+      <tr *ngIf="Amministratore == 'S'" style="text-align: left;">
+        <td colspan="4">
+          <img title="Aggiungi tag" src="assets/immagini/icona_SALVA.png" (click)="aggiungeTagALista()" style="cursor: pointer; width: 25px; height: 25px;">
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+    <div style="width: calc(100% - 60px); float: left; font-weight: bold;">
+      Lista Tags
+    </div>
+    <div style="width: 60px; float: left; text-align: right;">
+      <!-- <img #handleTV src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+      &nbsp; -->
+      <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mostraAggiungeTag = false">
+    </div>
+  </div>
+</div>
+
+<!-- CARICAMENTO IN CORSO -->
+<div *ngIf="caricamentoInCorso == true" 
+  style="z-index: 1599; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; background-color: black; opacity: .65;">
+</div>
+<div 
+  *ngIf="caricamentoInCorso == true"
+  style="
+    position: fixed;
+    left: calc(50% - 125px);
+    top: calc(50% - 175px);
+    width: 250px;
+    height: 350px;
+    z-index: 1500;
+  "
+>
+  <img src="assets/immagini/wait2.gif" style="width: 100%; height: 100%;">
+</div>
+<!-- CARICAMENTO IN CORSO -->
+
+<div 
+  style="position: fixed; width: auto; height: auto; padding: 5px; background-color: white; border-radius: 3px; border: 1px solid #999; z-index: 1600;"
+  [style.left.px]="posX"
+  [style.top.px]="posY"
+  [innerHtml]="testoPopup"
+>
+</div>

@@ -1,0 +1,1371 @@
+<!-- <div *ngIf="debug == true" class="barraDebug">
+  {{ operazioneInCorso }}
+</div>
+<div id="divTestScroll" 
+  style="position: absolute; left: 0px; top: 0px; font-size: 14px; width: 150px; height: 30px; background-color: red; color: white; border: 1px solid #999; z-index: 9999; overflow: hidden; white-space: nowrap;">
+  {{ testoScrollabile[0] }}
+</div> -->
+
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div style="position: absolute; top: 9px; z-index: 9; left: 9px;"
+  >
+  <img src="assets/immagini/icona_equalizz.png" style="cursor: pointer; width: 38px; height: 38px;" title="Mette / Toglie tasti" (click)="metteToglieTasti()">
+</div>
+
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div style="position: absolute; top: 9px; z-index: 9;"
+  [style.right] = "mascheraTesto == true ? '26%' : '9px'"
+  >
+  <img src="assets/immagini/utente.png" style="cursor: pointer; width: 38px; height: 38px;" title="Cambia utente ({{utenza}})" (click)="cambiaUtente()">
+  <img src="assets/immagini/hamburger.png" style="cursor: pointer; width: 38px; height: 38px;" title="Apre Menù" (click)="apreMenu()">
+</div>
+
+<!-- Maschera menù 
+[style.right] = "mascheraTesto == true ? '25%' : '5px'" -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div id="divMenu" ngDraggable *ngIf="menuMostrato == true" 
+  style="position: absolute; top: 30%; left: 30%; z-index: 1010; width: auto; height: auto; padding: 10px; 
+     box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+    margin-right: 5px; background-color: rgb(36 34 34); opacity: .85; border: 1px solid rgb(78 75 74); border-radius: 3px;"
+  (click)="tt.settaZIndex(5)"
+  >
+  <div style="width: 100%; text-align: center;"><h4><span style="color: green;">Menù</span></h4></div>
+  
+  <div style="float: left; margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="mascheraFiltroBrani == true" (change)="storage.checkFiltroBrani(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Filtro brani</span>
+  </div>
+  <div style="float: left; margin-top: 10px;width: 50%;">&nbsp;
+    <input type="checkbox" [checked]="mascheraBrani == true" (change)="storage.checkBrani(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Brani</span>
+  </div>
+  <div style="clear: both;"></div>
+  <div style="float: left; margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="mascheraTesto == true" (change)="storage.checkTesto(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Testo</span>
+  </div>
+  <div style="float: left; margin-top: 10px; width: 50%;">&nbsp;
+    <input type="checkbox" [checked]="mascheraOpzioni == true" (change)="storage.checkOpzioni(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Opzioni</span>
+  </div>
+  <div style="clear: both;"></div>
+  <div style="float: left; margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="mascheraArtisti == true" (change)="storage.checkArtisti(tt, $event); apreDettaglioArtisti();" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Dettaglio Artisti</span>
+  </div>
+  <div style="float: left; margin-top: 10px; width: 50%;">&nbsp;
+    <input type="checkbox" [checked]="pannelloUtility == true"  (change)="aprePannelloUtility()" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Utility</span>
+  </div>
+  <div style="clear: both;"></div>
+  <div *ngIf="Amministratore == 'S'" style="float: left; margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="debug == true" (change)="storage.checkDebug(tt, $event)" />&nbsp;
+    <span style="font-size: 15px; color: white;">Modalità debug</span>
+  </div>
+  <div *ngIf="Amministratore != 'S'" style="float: left; margin-top: 10px; width: 50%;">
+    &nbsp;
+  </div>
+  <!-- <div style="float: left; margin-top: 10px; width: 50%;">&nbsp;
+    <input type="checkbox" [checked]="comandiVocaliAttivi == true" (change)="storage.checkComandiVocali(tt, $event)" />&nbsp;
+    <span style="font-size: 15px; color: white;">Comandi<br />vocali</span>
+  </div> -->
+  <div style="clear: both;"></div>
+  <div style="float: left;  margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="visuaTagBrano == true" (change)="storage.checkVisuaTagBrano(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">Tag Brano</span>
+  </div>
+  <div style="float: left;  margin-top: 10px; width: 50%;">
+    <input type="checkbox" [checked]="mascheraAbout == true" (change)="storage.checkAbout(tt, $event)" /> &nbsp;
+    <span style="font-size: 15px; color: white;">About</span>
+  </div>
+  <div style="clear: both;"></div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="menuMostrato = false;">
+  </div>
+</div>
+<!-- Maschera menù -->
+
+<!-- CARICAMENTO IN CORSO -->
+<div 
+  *ngIf="caricamentoInCorso == true"
+  style="
+    position: absolute;
+    left: calc(50% - 125px);
+    top: calc(50% - 175px);
+    width: 250px;
+    height: 350px;
+    z-index: 2500;
+  "
+>
+  <img src="assets/immagini/wait2.gif" style="width: 100%; height: 100%;">
+</div>
+<!-- CARICAMENTO IN CORSO -->
+
+<!-- CORPO -->
+<div id="divSfondo"
+  style="width: 100%; height: 100%; background-color: black; overflow: hidden;"
+  (click)="accendeOpacita()"
+>
+  <div *ngIf="modalitaYouTube === 'S'" style="width: 100%; height: 100%; background-color: black;">
+    <div *ngIf="staCaricandoVideo == false && videoNONCaricato == true && videoSource" [style.width.%] = "mascheraTesto == true ? 75 : 100" style="height: 85%;">
+      <youtube-player #videoPlayer videoId="{{videoSource}}" width="100%" height="100%"></youtube-player>
+    </div>
+
+    <div *ngIf="staCaricandoVideo == false && videoNONCaricato == false && videoSource" [style.width.%] = "mascheraTesto == true ? 75 : 100" style="height: 85%;">
+      <video #videoPlayerLocale muted onloadedmetadata="this.muted=true" controls width="100%" height="100%">
+        <source src="{{videoSource}}"
+                type="video/mp4">    
+        Sorry, your browser doesn't support embedded videos.
+      </video>
+    </div>
+
+    <!-- {{staCaricandoVideo}}--{{videoNONCaricato}} -->
+    <img *ngIf="staCaricandoVideo == true" [style.width.%] = "mascheraTesto == true ? 75 : 100" style="height: 85%; z-index: 1000;" src="assets/immagini/please wait.jpg" />
+  </div>
+
+  <div id="divImmagine1" 
+    *ngIf="immagineBrano && modalitaYouTube === 'N'"
+    [style.width] = "mascheraTesto == true ? '75%' : '100%'"
+    [style.opacity] = "opacitaImmagine1"
+    style="position: absolute; height: 100%; left: 0px; top: 0px; background-color: black; 
+      background-repeat: no-repeat; background-size: cover; background-position: center;"
+    [ngStyle]="{'background-image': getUrl()}"
+  ></div>
+  
+  <div id="divImmagine2"
+    *ngIf="immagineBrano && modalitaYouTube === 'N'"
+    [style.width] = "mascheraTesto == true ? '75%' : '100%'"
+    [style.opacity] = "opacitaImmagine2"
+    style="position: absolute; height: 100%; left: 0px; top: 0px; background-color: black; 
+      background-repeat: no-repeat; background-size: contain; background-position: center;"
+    [ngStyle]="{'background-image': getUrl()}"
+  ></div>
+  <!-- [@fade]="state" (@fade.done)="onDone($event)" -->
+
+  <div style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;">
+    <div 
+      [style.width] = "mascheraTesto == true ? '75%' : '100%'"
+      style="float: left;">
+      <div style="width: 100%; height: 100%; padding: 5px; z-index: 1;">
+
+        <div style="width: 100%; height: 100%;">
+          <!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+          <div 
+            style="width: 100%; height: auto; float: left; text-align: center;
+                  background-color: rgb(36 34 34);
+                  opacity: .85;
+                  border-radius: 5px;
+                  border: 1px solid #9995;
+                  -webkit-box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+                  -moz-box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+                  box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+            ">
+            <div style="width: 100%;">
+              <div 
+                style="
+                  height: 37px;
+                  width: calc(100% - 50px);
+                  float : left; 
+                  text-align: center;
+                  opacity: .65;
+                  color: #fff700;
+                  white-space: nowrap;
+                  margin: 2px;
+                  border-radius: 3px;
+                ">
+                <span *ngIf="titoloBrano" style="font-family: Verdana; font-size: 22px;">{{scritte[qualeScritta]}}</span><br />
+              </div>
+
+              <div style="
+                margin: 2px;
+                width: 230px; 
+                float : left; 
+                height: auto;
+                text-align: right;
+                opacity: .75;
+                color: #fff700;
+                white-space: nowrap;
+                ">
+                <img *ngIf="modalitaYouTube == 'S'" src="assets/immagini/icona_INDIETRO.png" (click)="ytComponent.indietroVideo(this)" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <img *ngIf="modalitaYouTube == 'S'" src="assets/immagini/icona_SALVA.png" (click)="ytComponent.salvaVideo(this)" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <img *ngIf="modalitaYouTube == 'S'" src="assets/immagini/icona_DOWNLOAD-TAG.png" (click)="downloadVideo()" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <img *ngIf="modalitaYouTube == 'S' && videoNONCaricato == false" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaVideo()" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <img *ngIf="modalitaYouTube == 'S'" src="assets/immagini/icona_REFRESH.png" (click)="ytComponent.prendeVideoYouTube(this,'S')" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <img *ngIf="modalitaYouTube == 'S'" src="assets/immagini/icona_AVANTI.png" (click)="ytComponent.avanzaVideo(this)" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;">
+                <!-- <img src="assets/immagini/eliminadx.png" title="Elimina Brano" (click)="eliminaBrano()" style="margin-right: 5px; cursor: pointer; width: 35px; height: 35px;"> -->
+              </div>
+            </div>
+
+          </div>
+
+              <!-- background-color: rgb(36 34 34);
+              border-radius: 5px;
+              border: 1px solid #9995;
+              -webkit-box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+              -moz-box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+              box-shadow: 0px 0px 24px 2px rgba(0,0,0,0.75);
+               color: #fff700; -->
+          <div id="divBarraTasti" 
+            style="position: absolute; left: 0px; bottom: 5px;
+              padding: 3px;
+              margin-left: 5px;
+              opacity: .85;
+              white-space: nowrap;
+            "
+            (click)="settaZIndex(11)"
+            [style.width] = "mascheraTesto == true ? '74%' : '99%'">
+
+            <!-- Tasti musicali -->
+            <div *ngIf="visuaTasti == false" 
+              style="margin-right: 1%; float: left; padding: 2px;"
+              [style.width.%]="visuaTagBrano ? '69' : '99'">
+              &nbsp;
+            </div>
+            <div *ngIf="visuaTasti"
+              [style.width.%]="visuaTagBrano ? '69' : '99' "
+              style="color: #fff700; background-color: rgb(36 34 34); margin-right: 1%; float: left; border: 1px solid #6e605d; border-radius: 5px; padding: 2px;">
+
+              <!-- PROSSIMO BRANO -->
+              <div style="width: 100%; height: 27px; margin-bottom: 5px;">
+                <div class="nomeBrano"                
+                  [style.width]="fFiles.operazioneSuFile && fFiles.operazioneSuFile != '' ? titoloBranoAutomatico && titoloBranoAutomatico != '' ? '33%' :'50%' : titoloBranoAutomatico && titoloBranoAutomatico != '' ? '50%' : '100%'"
+                >
+                  <span *ngIf="!fFiles.operazioneSuFile || fFiles.operazioneSuFile == '' || !titoloBranoAutomatico || titoloBranoAutomatico == ''" >{{ artista }} - </span>
+                  <span *ngIf="!fFiles.operazioneSuFile || fFiles.operazioneSuFile == '' || !titoloBranoAutomatico || titoloBranoAutomatico == ''" >{{ album }} - </span>
+                  {{ titoloBrano }}
+                </div>
+
+                <div
+                  *ngIf="titoloBranoAutomatico && titoloBranoAutomatico != ''" 
+                  [style.width]="fFiles.operazioneSuFile && fFiles.operazioneSuFile != '' ? '33%' : '50%'"
+                  class="successivoMask">
+                  <div style="width: 30px; float: left;">
+                    <img src="assets/immagini/icona_REFRESH.png" style="margin-top: -7px; margin-right: 5px; cursor: pointer; width: 20px; height: 20px;" (click)="gestAndroid.scaricaProssimoBranoInAutomatico(tt)">
+                  </div>
+                  <!-- {{titoloBranoAutomatico}} -->
+                  <div #txtTitoloBranoAutomatico id="txtTitoloBranoAutomatico" style="width: calc(100% - 30px); float: left;">
+                    {{ testoScrollabile[0] }}
+                  </div>
+                  <div style="clear: both;"></div>
+                </div>            
+
+                <div
+                  *ngIf="fFiles.operazioneSuFile && fFiles.operazioneSuFile != ''" 
+                  [style.width]="titoloBranoAutomatico && titoloBranoAutomatico != '' ? '33%' : '50%'"
+                  class="downloadMask">
+                  <!-- {{fFiles.operazioneSuFile}} -->
+                  <div #txtOperazioneSuFile id="txtOperazioneSuFile" style="width: 100%;">
+                    {{ testoScrollabile[1] }}
+                  </div>
+                </div>
+              </div>
+              <!-- PROSSIMO BRANO -->
+              
+              <div style="width: 100%; float: left;">
+                <div style="width: 20%; text-align: left; float: left; white-space: nowrap;">
+                  &nbsp;{{tempoPassato}}
+                </div>
+                <div style="width: 60%; text-align: center; float: left; margin: -12px;">
+                  <mat-slider min="1" [max]="durata" step="1" [value]="posizioneBrano" (input)="spostamentoBarra($event)" ></mat-slider>
+                </div>
+                <div style="width: 20%; text-align: right; float: left; white-space: nowrap;">
+                  &nbsp;{{tempoTotale}}
+                </div>
+              </div>
+              <div style="width: 33%; text-align: center; float: left; margin-top: 10px;">
+                <img src="assets/immagini/indietro.png"
+                  onmouseover="this.src='assets/immagini/indietro_flip.png'"
+                  onmouseout="this.src='assets/immagini/indietro.png'"
+                  (click)="indietroBrano()"
+                  style="width: 64px; height: 64px;">
+              </div>
+              <div style="width: 34%; text-align: center; float: left; margin-top: 10px;">
+                <img *ngIf="staSuonando == true && staAspettandoCaricamento == false" src="assets/immagini/icona_pausa.png"
+                  onmouseover="this.src='assets/immagini/icona_pausa_flip.png'"
+                  onmouseout="this.src='assets/immagini/icona_pausa.png'"
+                  (click)="play(false);"
+                  style="width: 64px; height: 64px;">
+                <img *ngIf="staSuonando == false && staAspettandoCaricamento == false" src="assets/immagini/icona_PLAY.png"
+                  onmouseover="this.src='assets/immagini/icona_play_flip.png'"
+                  onmouseout="this.src='assets/immagini/icona_PLAY.png'"
+                  (click)="play(true);"
+                  style="width: 64px; height: 64px;">
+                <!-- <div *ngIf="staCaricandoVideo == true" style="width: 10px; height: 64px;">&nbsp;</div> -->
+              </div>
+              <div style="width: 33%; text-align: center; float: left; margin-top: 10px;">
+                <img src="assets/immagini/avanti.png"
+                  onmouseover="this.src='assets/immagini/avanti_flip.png'"
+                  onmouseout="this.src='assets/immagini/avanti.png'"
+                  (click)="avantiBrano()"
+                  style="width: 64px; height: 64px;">
+              </div>
+            </div>
+            <!-- Tasti musicali -->
+
+            <!-- Finestrella TAG -->
+            <div *ngIf="visuaTagBrano" style="width: 30%;
+              height: 136px;
+              float: left;
+              color: #fff700;
+              background-color: rgb(36 34 34);
+              border: 1px solid #6e605d;
+              border-radius: 5px;">
+              <div style="width: 100%; height: 25px; float: left; color: black; background-color: #83ff87; text-align: center; font-weight: bold;">
+                Tags
+              </div>
+              <div *ngIf="braniFiltrati" style="width: 100%; height: calc(100% - 25px); float: left; overflow: auto;">
+                <table *ngIf="tagsBrano" style="width: 100%;" cellapdding="0px" cellspacing="0px">
+                  <tr *ngFor="let tag of tagsBrano; index as j;">
+                    <td>
+                      <img *ngIf="Amministratore == 'S'" title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTag(tag.idTag)" style="cursor: pointer; width: 25px; height: 25px;">
+                    </td>
+                    <td>
+                      {{tag.Progressivo}}
+                    </td>
+                    <td>
+                      {{tag.Tag}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="position: absolute; top: 2px; right: 5px;">
+                <img *ngIf="Amministratore == 'S'" title="Aggiungi tag" src="assets/immagini/icona_CERCA.png" (click)="aggiungeTag()" style="cursor: pointer; width: 25px; height: 25px;">
+                <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="visuaTagBrano = false; storage.checkVisuaTagBrano(tt, false);">
+              </div>
+            
+            </div>  
+            <!-- Finestrella TAG -->
+              
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Maschera Testo -->
+  </div>
+</div>
+<!-- CORPO -->
+
+<!-- Maschera Testo -->
+<div id="divTesto"
+  *ngIf="mascheraTesto == true && immagineBrano"
+  [style.width] = "mascheraTesto == true ? '25%' : '0px'"
+  [ngStyle]="{'background-image': 'linear-gradient(rgba(55,55,55,.65), rgba(155,155,155,.65)), url(' + immagineBrano + ')'}"
+  style="
+    position: absolute;
+    right: 1px;
+    top: 0px;
+    background-color: rgb(37 37 37);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 100%;
+    overflow: hidden;
+    padding: 3px;
+    color: #ffffc6;        
+    font-size: 12px;
+    opacity: .8;
+    line-height: 13px;
+    float: left;
+  "      
+  (click)="settaZIndex(10)"    
+  >
+  <div *ngIf="isConnected" style="width: 100%; height: 80x; float: left; overflow-y: hidden; overflow-x: auto; white-space: nowrap;">        
+    <img *ngIf="bellezza[0]" title="Bellezza 1" [src]="bellezza[0]" (click)="settaStelle(1)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[0]" title="Bellezza 1" [src]="bellezza[0]" (click)="settaStelle(1)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[1]" title="Bellezza 2" [src]="bellezza[1]" (click)="settaStelle(2)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[2]" title="Bellezza 3" [src]="bellezza[2]" (click)="settaStelle(3)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[3]" title="Bellezza 4" [src]="bellezza[3]" (click)="settaStelle(4)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[4]" title="Bellezza 5" [src]="bellezza[4]" (click)="settaStelle(5)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[5]" title="Bellezza 6" [src]="bellezza[5]" (click)="settaStelle(6)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[6]" title="Bellezza 7" [src]="bellezza[6]" (click)="settaStelle(7)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[7]" title="Bellezza 8" [src]="bellezza[7]" (click)="settaStelle(8)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[8]" title="Bellezza 9" [src]="bellezza[8]" (click)="settaStelle(9)" style="cursor: pointer; width: 25px; height: 25px;">
+    <img *ngIf="bellezza[9]" title="Bellezza 10" [src]="bellezza[9]" (click)="settaStelle(10)" style="cursor: pointer; width: 25px; height: 25px;">
+    <br />
+    <img *ngIf="testoTradotto && testoTradotto != ''" [src]="linguaggioIcona" (click)="settaLinguaggio()" style="cursor: pointer; width: 35px; height: 35px;">
+    &nbsp;
+    <img src="assets/immagini/ascoltata.png" style="cursor: pointer; width: 25px; height: 20px;">{{volteAscoltatoBrano}}
+    <hr />
+  </div>
+  <div style="width: 100%; height: calc(100% - 80px); float: left; overflow: auto;">
+    <div *ngIf="linguaggio == 'OR'" style="margin-top: 10px; text-shadow: 1px 1px #000000;" [innerHTML]="testo"></div>
+    <div *ngIf="linguaggio == 'IT'" style="margin-top: 10px; text-shadow: 1px 1px #000000;" [innerHTML]="testoTradotto"></div>
+  </div>
+</div>
+<!-- Maschera Testo -->
+
+<!-- ICON MENU INFO ARTISTA
+<div 
+  *ngIf="playlistVisibile == false && infoArtistaVisibile == false && isConnected"
+  style="position: absolute; top: calc(25% - 32px); left: -14px; z-index: 1001;"
+  [style.left]="playlistVisibile ? '-275px' : '-21px'"
+>
+  <img src="assets/immagini/icona_AVANTI_Rossa.png"
+    style="width: 48px; height: 64px;"
+    (click)="infoArtistaVisibile = !infoArtistaVisibile">
+</div>
+ICON MENU INFO ARTISTA -->
+
+<!-- MENU INFO ARTISTA -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div id="divInfoArtista" ngDraggable [handle]="handleInfo" *ngIf="mascheraArtisti" 
+  [style.height]="deviceGirante == 'Android' ? 'calc(100% - 200px)' : 'calc(100% - 170px)'"
+  style="position: absolute; top: 55px; left: 0px; width: 60%; 
+  box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+  background-color: rgb(36 34 34); border: 1px solid rgb(78 75 74); opacity: .85; border-radius: 5px; z-index: 1001;
+  overflow: hidden;"
+  (click)="tt.settaZIndex(4)"    
+  >
+  <div style="width: 100%; height: 50px; text-align: center; float: left;">
+    <h5><span style="color: #c7bd1e">INFO Artista {{artista}}</span></h5>
+    <hr />
+  </div>
+
+  <div *ngIf="caricamentoInCorsoIA" style="height: calc(100% - 50px); width: 100%; float: left; overflow: auto;">
+    <img style="width: 100%; height: 100%;" src="assets/immagini/wait.gif" />
+  </div>
+
+  <div *ngIf="!caricamentoInCorsoIA" style="height: calc(100% - 50px); width: 100%; float: left; overflow: auto;">
+    <div style="width: 100%; text-align: center;">
+      <h6><span style="color: white">Membri / Gruppi di appartenenza</span></h6>
+    </div>
+    <table *ngIf="membriArtista" style="width: 100%;" cellpading="0" cellspacing="0">
+      <tr>
+        <th style="color: white">Nome</th>
+        <th style="color: white">Inizio</th>
+        <th style="color: white">Fine</th>
+        <th style="color: white">Ruolo</th>
+        <th style="color: white">Sesso</th>
+        <th style="color: white">Nascita</th>
+        <th style="color: white">Morte</th>
+        <th style="color: white">Citta</th>
+        <th style="color: white">Nazione</th>
+      </tr>
+      <tr *ngFor="let membro of membriArtista; index as j;">
+        <td style="color:#11d267; cursor: pointer;"><a (click)="goToLink('https://www.google.com/search?q=' + membro.Nome)">{{membro.Nome}}</a></td>
+        <td style="color: white">{{membro.Inizio}}</td>
+        <td style="color: white">{{membro.Fine}}</td>
+        <td style="color: white">{{membro.Ruolo}}</td>
+        <td style="color: white">{{membro.Sesso}}</td>
+        <td style="color: white">{{membro.DataNascita}}</td>
+        <td style="color: white">{{membro.DataMorte}}</td>
+        <td style="color: white">{{membro.Citta}}</td>
+        <td style="color: white">{{membro.Nazione}}</td>
+      </tr>
+    </table>
+
+    <br />
+    <div style="width: 100%; text-align: center;">
+      <h6><span style="color: white">Dischi</span></h6>
+    </div>
+    <table *ngIf="dischiArtista" style="width: 100%;" cellpading="0" cellspacing="0">
+      <tr>
+        <th style="color: white">Titolo</th>
+        <th style="color: white">Data</th>
+        <th style="color: white">Tipo</th>
+      </tr>
+      <tr *ngFor="let disco of dischiArtista; index as j;">
+        <td [style.background-color]="disco.Presente == 'S' ? '#c3f5b2' : '#f2f3f3'" style="width: 70%;">{{disco.Titolo}}</td>
+        <td [style.background-color]="disco.Presente == 'S' ? '#c3f5b2' : '#f2f3f3'" style="width: 20%;">{{disco.DataDisco}}</td>
+        <td [style.background-color]="disco.Presente == 'S' ? '#c3f5b2' : '#f2f3f3'" style="width: 10%;">{{disco.Tipologia}}</td>
+      </tr>
+    </table>
+
+    <br />
+    <div style="width: 100%; text-align: center;">
+      <h6><span style="color: white">Collegamenti</span></h6>
+    </div>
+    <table *ngIf="urlsArtista" style="width: 100%;" cellpading="0" cellspacing="0">
+      <tr>
+        <th>Indirizzo</th>
+        <th>Tipo</th>
+      </tr>
+      <tr *ngFor="let url of urlsArtista; index as j;">
+        <td style="width: 80%; color:blue; cursor: pointer;"><a (click)="goToLink(url.Indirizzo)">{{url.Indirizzo}}</a></td>
+        <td style="width: 20%;">{{url.Tipologia}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img #handleInfo src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp;<img *ngIf="!caricamentoInCorsoIA" src="assets/immagini/icona_REFRESH.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="caricaDettaglioArtista('S')">
+    &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraArtisti = false; storage.checkArtisti(tt, false);">
+  </div>
+</div>
+<!-- MENU INFO ARTISTA -->
+
+<!-- ICON MENU' SINISTRA
+<div 
+  *ngIf="infoArtistaVisibile == false && isConnected"
+  style="position: absolute; top: calc(63% - 32px); left: -14px; z-index: 1001;"
+  [style.left]="playlistVisibile == true ? '275px' : '-21px'"
+>
+  <img src="assets/immagini/icona_AVANTI.png"
+    style="width: 48px; height: 64px;"
+    (click)="playlistVisibile = !playlistVisibile">
+</div>
+ICON MENU' SINISTRA -->
+
+<!-- FILTRO BRANI -->
+<app-filtro
+  [mascheraFiltroBrani]="mascheraFiltroBrani"
+  [deviceGirante]="deviceGirante"
+  [mascheraOpzioni]="mascheraOpzioni"
+  [mascheraTesto]="mascheraTesto"
+  [fFiles]="fFiles"
+  [braniFiltrati]="braniFiltrati"
+  [storage]="storage"
+  [eliminaMamma]="eliminaMamma"
+  [canzoniLocali]="canzoniLocali"
+  [canzoniMamma]="canzoniMamma"
+  [consideraStelle]="consideraStelle"
+  [maiVotate]="maiVotate"
+  [isConnected]="isConnected"
+  [tt]="tt"
+  [filtroImpostato]="filtroImpostato"
+  [quantiBraniFiltrati]="quantiBraniFiltrati"
+  [numeroStelle]="numeroStelle"
+  [tags]="tagsRicerca"
+  [listaTags]="listaTags"
+  [esclusioni]="esclusioni"
+  [zIndex]="zIndex"
+
+  (mascheraFiltroBraniEmit)="mascheraFiltroBrani = $event"
+  (fFilesEmit)="fFiles = $event"
+  (braniFiltratiEmit)="braniFiltrati = $event"
+  (eliminaMammaEmit)="eliminaMamma = $event"
+  (canzoniLocaliEmit)="canzoniLocali = $event"
+  (canzoniMammaEmit)="canzoniMamma = $event"
+  (consideraStelleEmit)="consideraStelle = $event"
+  (maiVotateEmit)="maiVotate = $event"
+  (filtroImpostatoEmit)="filtroImpostato = $event; filtraBrani();"
+  (numeroStelleEmit)="numeroStelle = $event"
+  (esclusioniEmit)="esclusioni = $event; filtraBrani();"
+  (tagsEmit)="tagsRicerca = $event; filtraBrani();"
+>
+</app-filtro>
+<!-- FILTRO BRANI -->
+
+<!-- MENU' LISTA BRANI  ngDraggable [handle]="handleTreeView" -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' "
+[style.height]="deviceGirante == 'Android' ? 'calc(100% - 233px)' : 'calc(100% - 203px)'" -->
+<div id="divListaBrani" *ngIf="mascheraBrani"
+  style="position: absolute; top: 55px; left: 3px; width: calc(50% - 5px); 
+    box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+    height: calc(100% - 203px);
+    background-color: rgb(36 34 34); border: 1px solid rgb(78 75 74); opacity: .85; border-radius: 5px; z-index: 1001;
+    overflow: hidden; max-width: 250px;"
+  (click)="tt.settaZIndex(3)"    
+  >
+  <!-- <img src="assets/immagini/icona_INDIETRO.png" style="position: absolute; right: 0px; top: 0px; z-index: 99;" (click)="playlistVisibile = false"> -->
+
+  <div style="width: 100%; height: 100%; float: left; border-top: 1px solid #999; -webkit-box-shadow: 1px -4px 12px -2px #000000; box-shadow: 1px -4px 12px -2px #000000;">
+    <app-treeview
+      [braniFiltrati]="braniFiltrati"
+      [numeroBranoSelezionato]="numeroBranoAttuale"
+      [playlistVisibile]="mascheraBrani"
+      [mostraCanzoni]="true"
+      [listaTags]="listaTags"
+      [Amministratore]="Amministratore"
+      [deviceGirante]="deviceGirante"
+
+      (branoInLocale)="branoPresenteSuSD = $event;"
+      (branoClickato)="caricaBranoConClick($event)"
+      (numeroBrani)="quantiBraniFiltrati = $event;"
+      (braniCambiati)="braniFiltrati = $event"
+    >
+    </app-treeview>
+  </div>
+  
+  <div style="position: absolute; top: 0px; right: 8px;">
+    <!-- <img #handleTreeView src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp; -->
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraBrani = false; storage.checkBrani(tt, false);">
+  </div>
+</div>
+<!-- MENU' LISTA BRANI -->
+
+<!-- ICONA MENU' DESTRA
+<div
+  *ngIf="isConnected"
+  style="position: absolute; top: calc(50% - 32px); "
+  [style.right]="impostazioniVisibile == true ? '230px' : '-21px'"
+>
+  <img src="assets/immagini/icona_INDIETRO.png" 
+    style="width: 48px; height: 64px; opacity: .8;" 
+    (click)="impostazioniVisibile = !impostazioniVisibile">
+</div>
+ICONA MENU' DESTRA -->
+
+<!-- MENU' OPZIONI -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div id="divOpzioni" ngDraggable [handle]="handleOpzioni" *ngIf="mascheraOpzioni" 
+  [style.height]="deviceGirante == 'Android' ? 'calc(100% - 233px)' : 'calc(100% - 203px)'"
+  [style.right] = "mascheraTesto == true ? '25%' : '2px'"
+  style="position: absolute; top: 55px; margin-right: 3px; width: 250px;  overflow: auto;
+        box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+        background-color: rgb(36 34 34); padding: 5px; z-index: 1009; opacity: .85;
+        border-radius: 5px; border: 1px solid rgb(78 75 74);"
+  (click)="tt.settaZIndex(6)"
+  >
+  <!-- <img src="assets/immagini/icona_AVANTI.png" style="position: absolute; left: 0px; top: 0px; z-index: 99;" (click)="impostazioniVisibile = false"> -->
+  <br />
+  <br />
+  <div style="position: absolute; width: 97%; height: calc(100% - 40px); top: 20px; overflow: auto;">
+    <table style="width: 100%;">
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="random == 'S'" (change)="storage.checkRandom(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Modalità Random</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="modalitaYouTube == 'S'" (change)="storage.checkModalitaYouTube(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Modalità YouTube</span>
+        </td>
+      </tr>
+      <!-- <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="moadalitaLite" (change)="storage.checkModalitaLight(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Modalità LITE</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="visuaTesto == 'S'" (change)="checkVisuaTesto($event)" />
+        </td>
+        <td>
+          Visualizza Testo
+        </td>
+      </tr> -->
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="sfuma == true" (change)="storage.checkSfumaImmagini(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Sfuma immagini</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="cicla == true" (change)="storage.checkCiclaImmagini(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Cicla sempre immagini</span>
+        </td>
+      </tr>
+      <tr *ngIf="Amministratore == 'S'">
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="debug == true" (change)="storage.checkDebug(tt, $event); aprePannelloDebug();" />
+        </td>
+        <td>
+          <span style="color: white">Modalità debug</span>
+        </td>
+      </tr>
+      <tr *ngIf="deviceGirante == 'Android'">
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="checkRicaricaBraniLocali == true" (change)="storage.checkRicarica(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Ricarica locali</span>
+        </td>
+      </tr>
+      <tr *ngIf="deviceGirante == 'Android'">
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="limitaBrani == true" (change)="storage.checkLimitaBrani(tt, $event)" />
+        </td>
+        <td>
+          <span style="color: white">Limita brani memorizzati su SD</span>
+        </td>
+      </tr>
+      <tr *ngIf="deviceGirante == 'Android' && limitaBrani == true">
+        <td style="text-align: center;">
+        </td>
+        <td>
+          <input type="text" [value]="numeroLimiteBrani" (input)="storage.cambiaLimiteBrani(tt, $event.target.value)" style="width: 99%;">
+        </td>
+      </tr>     
+      <tr *ngIf="Amministratore == 'S'">
+        <td style="text-align: center;">
+          <img src="assets/immagini/icona_CERCA.png" style="cursor: pointer; width: 40px; height: 40px;" (click)="scaricaTesto()">
+        </td>
+        <td>
+          <span style="color: white">Riscarica Testo</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <img src="assets/immagini/SegueNo.png" style="cursor: pointer; width: 40px; height: 40px;" (click)="tuttoSchermo()">
+        </td>
+        <td>
+          <span style="color: white">Tutto Schermo</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <img src="assets/immagini/icona_equalizz.png" style="cursor: pointer; width: 40px; height: 40px;" (click)="aprePannelloUtility()">
+        </td>
+        <td>
+          <span style="color: white">Utility</span>
+        </td>
+      </tr>     
+      <tr *ngIf="Amministratore == 'S'">
+        <td style="text-align: center;">
+          <img src="assets/immagini/eliminadx.png" style="cursor: pointer; width: 55px; height: 55px;" (click)="eliminaImmagine()">
+        </td>
+        <td>
+          <span style="color: white">Elimina Immagine</span>
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center;">
+          <img src="assets/immagini/icona_DOWNLOAD-TAG.png" style="cursor: pointer; width: 40px; height: 40px;" (click)="scaricaImmagine()">
+        </td>
+        <td>
+          <span style="color: white">Scarica Immagine</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  
+  <div style="position: absolute; top: 0px; right: 5px;">
+    <img #handleOpzioni src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraOpzioni = false; storage.checkOpzioni(tt, false);">
+  </div>
+</div>
+<!-- MENU' OPZIONI -->
+
+<!-- MASCHERA RICERCA
+<div
+ *ngIf="bRicercaBrano === true"
+ style="
+  position: absolute;
+  background-color: white;
+  opacity: .9;
+  left: 15%;
+  top: 15%;
+  width: 80%;
+  height: 70%;
+  border-radius: 5px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  text-align: center;
+  z-index: 999;
+">
+  <h3>Ricerca brano</h3>
+  <hr />
+  Filtro&nbsp;
+  <input type="text" (input)="utility.filtraBrani(this)">&nbsp;
+  Rilevati: {{ listaFiltrata.length }}
+  <hr />
+  <div style="width: 100%; height: 60%; overflow: auto; text-align: left;">
+    <ul>
+      <li *ngFor="let item of listaFiltrata; index as i;" >
+        <div             
+          style="padding: 3px;"            
+          (mouseover)="hover[i] = true"
+          (mouseleave)="hover[i] = false"
+          [style.background-color]="hover[i] == true  ? '#fbd0d0' : 'transparent'"
+          (click)="selezioneBranoFiltrato(item)"
+          >
+          Artista:&nbsp;{{item.Artista}}<br />
+          Album:&nbsp;{{item.Album}}<br />
+          Brano:&nbsp;{{item.Brano}}<br />
+        </div>
+        <br />
+      </li>
+    </ul>
+  </div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="bRicercaBrano = false">
+  </div>
+</div>
+ -->
+
+<!-- MESSAGGIO -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div 
+  *ngIf="messaggioVisualizzato == true"
+  style="
+    position: absolute;
+    top : 50px;
+    width: auto;
+    height: auto;
+    border: 1px solid #999;
+    opacity: .9;
+    border-radius: 3px;
+    z-index: 9999;
+    padding: 3px;
+    -webkit-box-shadow: 0px 0px 31px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 31px 5px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 31px 5px rgba(0,0,0,0.75);    
+  "
+  [style.right.%] = "mascheraTesto == true ? 26 : 2"
+  [style.background-color] = "coloreSfondoMessaggio"
+>
+  {{messaggio}}
+</div>
+<!-- MESSAGGIO -->
+
+<!-- MASCHERA UTILITY -->
+<div id="divUtility" ngDraggable
+ *ngIf="pannelloUtility === true"
+ style="
+  position: absolute;
+  background-color: white;
+  opacity: .95;
+  left: 5%;
+  top: 15%;
+  width: 90%;
+  height: 70%;
+  border-radius: 5px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  text-align: center;
+  overflow: auto;
+  z-index: 1012;
+  "
+  (click)="settaZIndex(7)"
+>
+  <h3>Utility</h3>
+  <hr />
+
+  <div style="width: 100%; height: 100%; display: contents;">
+    <div *ngIf="Amministratore == 'S'" class="bottoncione" (click)="scaricaVideoPregressi()">
+      <div class="iconaDentro"><img src="assets/immagini/icona_DOWNLOAD-TAG.png" style="width: 100%; height: 100%;"></div>
+      Scarica Video
+    </div>
+    <div class="bottoncione" (click)="storage.pulisceCookies()">
+      <div class="iconaDentro"><img src="assets/immagini/icona_ELIMINA-TAG.png" style="width: 100%; height: 100%;"></div>
+      Pulisce Cookies
+    </div>
+    <div *ngIf="Amministratore == 'S' && idUtenza == 1" class="bottoncione" (click)="eliminaBrutte()">
+      <div class="iconaDentro"><img src="assets/immagini/SuddenDeath.png" style="width: 100%; height: 100%;"></div>
+      Elimina Brutte
+    </div>
+    <div class="bottoncione" (click)="gestioneUguali()">
+      <div class="iconaDentro"><img src="assets/immagini/uguali.png" style="width: 100%; height: 100%;"></div>
+      Uguali
+    </div>
+    <div *ngIf="deviceGirante == 'Android'" class="bottoncione" (click)="ricaricaBraniLocali()">
+      <div class="iconaDentro"><img src="assets/immagini/hd4.png" style="width: 100%; height: 100%;"></div>
+      Ricarica Brani Locali
+    </div>
+    <div class="bottoncione" (click)="aprePannellogestioneBrani()">
+      <div class="iconaDentro"><img src="assets/immagini/icona_info.png" style="width: 100%; height: 100%;"></div>
+      Gestione Brani
+    </div>
+    <div class="bottoncione" (click)="refreshCanzoni()">
+      <div class="iconaDentro"><img src="assets/immagini/preferito.png" style="width: 100%; height: 100%;"></div>
+      Refresh SOFT
+    </div>
+    <div class="bottoncione" (click)="refreshCanzoniHARD(true)">
+      <div class="iconaDentro"><img src="assets/immagini/icona_ATTENZIONE.png" style="width: 100%; height: 100%;"></div>
+      Refresh HARD
+    </div>
+    <div *ngIf="Amministratore == 'S' && idUtenza == 1" class="bottoncione" (click)="uploadBrani()">
+      <div class="iconaDentro"><img src="assets/immagini/icona-NASCONDE.png" style="width: 100%; height: 100%;"></div>
+      Upload Brani
+    </div>
+  </div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="pannelloUtility = false">
+  </div>
+</div>
+<!-- MASCHERA UTILITY -->
+
+<!-- MASCHERA GESTIONE BRANI -->
+<div id="divGestioneBrani" ngDraggable [handle]="handleGestBrani"
+ *ngIf="mascheraGestioneBrani === true"
+ style="
+  position: absolute;
+  background-color: black;
+  opacity: .95;
+  left: 5%;
+  top: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 5px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  text-align: center;
+  z-index: 1013;
+  "
+  (click)="settaZIndex(8)"
+>
+  <h3>Gestione Brani</h3>
+  <hr />
+
+  <div style="width: 100%; height: 100%;">
+    <div style="width: 25%; height: calc(100% - 70px); float: left; text-align: left; overflow: auto;">
+      <app-treeview
+        [braniFiltrati]="datiJSON"
+        [numeroBranoSelezionato]="numeroBrano"
+        [playlistVisibile]="mascheraBrani"
+        [mostraCanzoni]="false"
+        [idUtenza]="idUtenza"
+        [Amministratore]="Amministratore"
+
+        (ritornoBrani)="braniAlbum($event)"
+      >
+      </app-treeview>
+    </div>
+    <div style="width: 45%; height: 85%; float: left; text-align: left;">
+      <app-album
+        [datiAlbum]="albumSelezionato"
+        [urlImmagine]="urlImmagine"
+        [idUtenza]="idUtenza"
+        [Amministratore]="Amministratore"
+
+        (datiJsonRitornati)="impostaDatiJSON($event)"
+      >
+      </app-album>
+   
+    </div>
+    <div style="width: 30%; height: 85%; float: left; text-align: center; overflow: auto;">
+      <app-immagini
+        [immagini]="immaginiArtista"
+        [urlWS]="urlWS"
+        [Amministratore]="Amministratore"
+      >
+      </app-immagini>
+    </div>
+  </div>
+  <div style="clear: both;"></div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img #handleGestBrani src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraGestioneBrani = false">
+  </div>
+</div>
+<!-- MASCHERA GESTIONE BRANI -->
+
+<!-- MASCHERA GESTIONE UGUALI -->
+<div id="divUguali" ngDraggable [handle]="handleUguali"
+ *ngIf="mascheraGestioneUguali === true"
+ style="
+  position: absolute;
+  background-color: white;
+  opacity: .95;
+  left: 5%;
+  top: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 5px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  text-align: center;
+  z-index: 1002;
+"
+(click)="settaZIndex(9)"
+>
+  <h3>Gestione Uguali</h3>
+  <hr />
+
+  <div style="width: 100%; height: 100%;">
+    <div style="width: 50%; height: 85%; float: left; text-align: left; overflow: auto;">
+      <table *ngIf="uguali" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <th>
+            Artista
+          </th>
+          <th>
+            Brano
+          </th>
+          <th>
+            N°
+          </th>
+          <th>            
+          </th>
+          <th>
+          </th>
+        </tr>
+        <tr *ngFor="let brano of uguali; index as i;">
+          <td style="width: 48%;">
+            {{brano.Artista}}
+          </td>
+          <td style="width: 48%;">
+            {{brano.Brano}}
+          </td>
+          <td style="width: 4%; text-align: right;">
+            {{brano.Quante}}
+          </td>
+          <td>
+            &nbsp;
+          </td>
+          <td>
+            <img src="assets/immagini/icona_CERCA.png" title="Visualizza Brani" style="cursor: pointer; width: 25px; height: 25px;" (click)="visualizzaUguali(brano);">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div style="width: 50%; height: 85%; float: left; text-align: left;">
+      <table *ngIf="ugualiDettaglio" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <th>
+            Traccia
+          </th>
+          <th>
+            Anno
+          </th>
+          <th>
+            Album
+          </th>
+          <th>
+            <img src="assets/immagini/preferito.png" style="cursor: pointer; width: 20px; height: 20px;">        
+          </th>
+          <th>
+            <img src="assets/immagini/ascoltata.png" style="cursor: pointer; width: 20px; height: 20px;">
+          </th>
+          <th>            
+          </th>
+        </tr>
+        <tr *ngFor="let brano of ugualiDettaglio; index as i;">
+          <td>
+            {{brano.Traccia}}
+          </td>
+          <td>
+            {{brano.Anno}}
+          </td>
+          <td>
+            {{brano.Album}}
+          </td>
+          <td>
+            {{brano.Bellezza}}
+          </td>
+          <td>
+            {{brano.Ascoltata}}
+          </td>
+          <td>
+            <img src="assets/immagini/icona_ELIMINA-TAG.png" title="Elimina brano" style="cursor: pointer; width: 25px; height: 25px;" (click)="eliminaBranoUguali(brano)">
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img #handleUguali src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraGestioneUguali = false">
+  </div>
+</div>
+<!-- MASCHERA GESTIONE UGUALI -->
+
+<!-- ASSENZA RETE -->
+<div *ngIf="!isConnected" style="position: absolute; top: 5px; left: calc(50% - 20px); width: 40px;">
+  <img src="assets/immagini/wifi_1.png" style="margin-right: 5px; cursor: pointer; width: 40px; height: 40px;">
+</div>
+<!-- ASSENZA RETE -->
+
+<!-- 
+<div style="position: absolute; bottom: 1px; left: 0px; width: 100%; height: 30px; text-align: center; background-color: white; opacity: .85; border: 1px solid #999;">
+  {{appoSfondo}}
+</div>
+-->
+
+<!-- Maschera DEBUG ngDraggable [handle]="handleDebug" -->
+<div id="divDebug"
+  style="width: 90%; height: auto; position: absolute; left: 5%; top: 25%;">
+  <div *ngIf="debug == true"
+    style="
+      width: 100%;
+      height: 30px;
+      background-color: #171717;
+      border: 1px solid #68696d;
+      padding: 2px;
+      float: left;
+      box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      border-radius: 3px;
+      text-align: right;"
+    (click)="settaZIndex(1)"
+  >
+      <span style="color: green; margin-top: -2px;">Filtro&nbsp;</span><input type="text" [value]="filtroImpostatoDebug" (input)="filtroImpostatoDebug = $event.target.value; utility.metteFiltroDebug(tt);" style="width: 30%; margin-top: -2px;">
+      <img #handleDebug src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+      &nbsp;<img src="assets/immagini/icona_REFRESH.png" style="cursor: pointer; width: 25px; height: 25px; z-index: 9999; margin-top: -4px;" (click)="debuggone = ''; debuggone2 = '';">
+      &nbsp;<img src="assets/immagini/EMail.png" style="cursor: pointer; width: 25px; height: 25px; z-index: 9999; margin-top: -4px;" (click)="mandaEmail()">
+      &nbsp;<img *ngIf="deviceGirante == 'Android'" src="assets/immagini/icona_SALVA.png" style="cursor: pointer; width: 25px; height: 25px; z-index: 9999; margin-top: -4px;" (click)="salvaLog()">
+      &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px; z-index: 9999; margin-top: -4px;" (click)="debug = false">
+  </div>
+  <div #scrollMe *ngIf="debug" 
+    [innerHTML]="debuggone2" [scrollTop]="scrollMe.scrollHeight"
+    style="width: 100%; height: 300px; overflow: auto; float: left;
+          background-color: yellow; border: 1px solid #999; border-radius: 3px;"
+    (click)="settaZIndex(1)"
+  >
+  </div>
+</div>
+<!-- Maschera DEBUG -->
+
+<!-- Maschera About -->
+<div *ngIf="mascheraAbout === true" ngDraggable style="position: absolute;
+  z-index: 9999;
+  text-align: center;
+  left: 33%;
+  width: 33%;
+  top: 10%;
+  height: 75%;
+  overflow: auto;
+  opacity: .85;
+  background-color: white;
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding-bottom: 5px;
+  box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;">
+  <h1>looWebPlayer</h1>
+  <hr />
+  @Copyright Looigi227
+  <img src="assets/immagini/looigi.JPG" width="90%" height="60%" style="border: 1px solid #999; border-radius: 5px;;">
+  <hr />
+  <!-- OS: <span style="color: red">{{ os }}</span><br />
+  OS vers.: {{ osVers }}<br />
+  Device: {{ device }}<br />
+  User Agent: {{ userAgent }}<br />
+  Browser: {{ browser }}<br />
+  Mobile: {{ isMobile }}<br />
+  Tablet: {{ isTablet }}<br />
+  Desktop Device: {{ isDesktopDevice }}<br />
+  Path: {{ pathApp }}<br />
+  Cordova: {{ ceCordova }}
+  <hr /> -->
+
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraAbout = false">
+  </div>
+</div>
+<!-- Maschera About -->
+
+<!-- Icona cuffia -->
+<!--   [style.margin-top]="deviceGirante == 'Android' ? '30px' : '0px' " -->
+<div *ngIf="cuffieAttive === true" 
+  style="position: absolute; top: 10px; left: 10px; width: 40px; height: 40px; z-index: 1500;">
+  <img src="assets/immagini/cuffie.png" style="width: 100%; height: 100%;">
+</div>
+<!-- Icona cuffia -->
+
+<!-- Maschera lettura SD-->
+<div *ngIf="letturaSD == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      position: absolute;
+      width: auto;
+      max-width: 50%;
+      height: auto;
+      z-index: 9999;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 35%;
+      padding: 5px;
+      overflow: hidden;
+      background-color: white;
+      border-radius: 3px;
+      border: 1px solid #999;
+      text-align: center;">
+  Lettura SD in corso <br />
+  {{ cartellaEsaminata }}
+  <hr />
+  Brani rilevati: {{fFiles.filesInMemoria.length }}
+</div>
+<!-- Maschera lettura SD-->
+
+<!-- Finestra comandi vocali -->
+<div *ngIf="comandoVocale && comandoVocale !== ''" 
+  style="position: absolute; left: 10px; top: 10px; z-index: 9999; background-color: #ffffc6; border: 1px solid #999; border-radius: 3px; padding: 3px; width: auto; height: auto;">
+  {{comandoVocale}}
+</div>
+<!-- Finestra comandi vocali -->
+
+<!-- Finestra tags -->
+<div *ngIf="mostraAggiungeTag == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      position: absolute;
+      width: auto;
+      max-width: 50%;
+      height: auto;
+      z-index: 9999;
+      left: 50%;
+      transform: translateX(-50%);
+      transform: translateY(-50%);
+      max-height: 80%;
+      top: 50%;
+      padding: 5px;
+      overflow: hidden;
+      background-color: white;
+      border-radius: 3px;
+      min-width: 150px;
+      border: 1px solid #999;
+      text-align: center;">
+
+    <div style="width: 100%; max-height: 400px; overflow: auto; margin-top: 20px;">
+      <table *ngIf="listaTagsVisualizzati" style="width: 100%;" cellapdding="0px" cellspacing="0px">
+        <tr>
+          <th>
+          </th>
+          <th>
+          </th>
+          <th>
+            ID
+          </th>
+          <th>
+            Tag
+          </th>
+        </tr>
+        <tr *ngFor="let tag of listaTagsVisualizzati; index as j;">
+          <td>
+            <img title="Seleziona tag" src="assets/immagini/matitadx.png" (click)="selezionaTag(tag.idTag, tag.Tag)" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+          <td>
+            <img title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTagDaLista(tag.idTag)" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+          <td>
+            {{tag.idTag}}
+          </td>
+          <td>
+            {{tag.Tag}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4"><hr /></td>
+        </tr>
+        <tr style="text-align: left;">
+          <td colspan="1">
+            <span style="font-weight: bold;">Tag</span>
+          </td>
+          <td colspan="3">
+            <input type="text" [(ngModel)]="nuovoTag" style="width: 100%; min-width: 250px;">
+          </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td colspan="4">
+            <img title="Aggiungi tag" src="assets/immagini/icona_SALVA.png" (click)="aggiungeTagALista()" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+      <div style="width: calc(100% - 60px); float: left; font-weight: bold;">
+        Lista Tags
+      </div>
+      <div style="width: 60px; float: left; text-align: right;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mostraAggiungeTag = false">
+      </div>
+    </div>
+</div>
+
+<!-- Finestra utenti
+<div *ngIf="mostraSceltaUtenti == true || caricamentoInCorso == true" -->
+<div *ngIf="mostraSceltaUtenti == true" 
+  style="z-index: 2450; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; background-color: black; opacity: .65;">
+</div>
+
+<div *ngIf="mostraSceltaUtenti == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      position: absolute;
+      width: auto;
+      max-width: 50%;
+      height: auto;
+      z-index: 2500;
+      left: 50%;
+      transform: translateX(-50%);
+      transform: translateY(-50%);
+      max-height: 80%;
+      top: 50%;
+      padding: 5px;
+      overflow: hidden;
+      background-color: white;
+      border-radius: 3px;
+      min-width: 150px;
+      border: 1px solid #999;
+      text-align: center;">
+
+    <div style="width: 100%; max-height: 400px; overflow: auto; margin-top: 20px;">
+      <table *ngIf="Utenti" style="width: 100%;" cellapdding="0px" cellspacing="0px">
+        <tr>
+          <th>            
+          </th>
+          <th>
+            Utente
+          </th>
+        </tr>
+        <tr *ngFor="let ute of Utenti; index as j;">
+          <td>
+            <img title="Seleziona Utente" src="assets/immagini/matitadx.png" (click)="selezionaUtente(ute)" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+          <td>
+            {{ute.Utente}}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+      <div style="width: calc(100% - 60px); float: left; font-weight: bold;">
+        Lista Utenti
+      </div>
+      <div style="width: 60px; float: left; text-align: right;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mostraSceltaUtenti = false">
+      </div>
+    </div>
+</div>
+
+<div *ngIf="passwordBox == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      position: absolute;
+      width: auto;
+      max-width: 50%;
+      height: auto;
+      z-index: 2701;
+      left: 50%;
+      transform: translateX(-50%);
+      transform: translateY(-50%);
+      max-height: 80%;
+      top: 50%;
+      padding: 5px;
+      overflow: hidden;
+      background-color: white;
+      border-radius: 3px;
+      min-width: 150px;
+      border: 1px solid #999;
+      text-align: center;">
+      <h5>Password per l'utente</h5>
+      <div style="width: 100%;">
+          <div style="width: calc(100% - 60px); float: left;">
+            <input type="password" [(ngModel)]="pwd" style="width: 100%;">
+          </div>
+          <div style="width: 60px; text-align: right; float: left;">
+            <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="passwordBox = false">
+            <img src="assets/immagini/icona_AVANTI.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="checkPassword()">
+          </div>
+      </div>
+</div>
+
+<!-- UPLOAD Brani-->
+<app-upload
+  [mascheraVisibile]="mascheraUploadVisibile"
+  [urlPerUpload]="urlPerUpload"
+  [t]="tt"
+
+  (refreshBrani)="mascheraUploadVisibile = false; refreshCanzoniHARD(false);"
+  (chiusuraMaschera)="mascheraUploadVisibile = false"
+>
+</app-upload>
+<!-- UPLOAD Brani-->

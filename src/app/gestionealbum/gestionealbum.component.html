@@ -1,0 +1,154 @@
+<div style="width: 100%; height: 100%;">
+    <div *ngIf="album" style="margin: 1%; background-color: white; width: 98%; height: 98%; border: 1px solid #999; border-radius: 4px;">
+        <div style="width: 100%; height: 150px; border-bottom: 1px solid #999;">
+            <div style="width: 150px; height: 150px; float: left; border: 1px solid #999;">
+                <img [src]="immagineAlbum" style="width: 100%; height: 100%;" />
+            </div>
+            <div style="width: calc(100% - 150px); height: 150px; float: left; overflow: auto; padding: 5px;">
+                <h1>{{nomeAlbum}}</h1>
+                <h3>Anno {{album.anno}}</h3>
+                <div style="width: 100%; text-align: right; height: 35px; border-top: 1px solid #999; padding-top: 5px;">
+                    <img src="assets/immagini/icona_DOWNLOAD-TAG.png" title="Scarica immagine Album" style="cursor: pointer; width: 35px; height: 35px;" (click)="scaricaImmagineAlbum();">
+                    &nbsp;
+                    <img src="assets/immagini/eliminadx.png" title="Elimina Album" style="cursor: pointer; width: 35px; height: 35px;" (click)="eliminaAlbum();">
+                    &nbsp;
+                    <img src="assets/immagini/matitadx.png" title="Rinomina Album" style="cursor: pointer; width: 35px; height: 35px;" (click)="rinominaAlbum();">
+                </div>                 
+            </div>
+
+        </div>
+       
+        <div style="width: 100%; height: calc(100% - 150px); float: left; overflow: auto;">
+            <div style="width: 100%; overflow: auto; height: auto;">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <th>
+                            N°
+                        </th>
+                        <th>
+                            Titolo
+                        </th>
+                        <th style="text-align: right;">
+                            <img src="assets/immagini/ascoltata.png" style="width: 20px; height: 15px;">
+                        </th>
+                        <th style="text-align: right;">
+                            <img src="assets/immagini/preferito.png" style="width: 20px; height: 20px;">
+                        </th>
+                        <th>                    
+                        </th>
+                        <th>                    
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="6"><hr /></th>
+                    </tr>
+                    <tr *ngFor="let brano of album.brani; index as i;">
+                        <td>
+                            {{brano.Traccia}}
+                        </td>
+                        <td>
+                            {{brano.Text}}
+                        </td>
+                        <td style="text-align: right;">
+                            {{+brano.Ascoltata}}
+                        </td>
+                        <td style="text-align: right;">
+                            {{brano.Stelle}}
+                        </td>
+                        <td style="text-align: right;">
+                            <img src="assets/immagini/eliminadx.png" title="Elimina Brano" style="cursor: pointer; width: 25px; height: 25px;" (click)="eliminaBrano(brano);">
+                        </td>
+                        <td style="text-align: right;">
+                            <img src="assets/immagini/matitadx.png" title="Rinomina Brano" style="cursor: pointer; width: 25px; height: 25px;" (click)="rinominaBrano(brano);">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="mascheraRinomina || scaricamentoImmagine" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-color: #999; opacity: .5; z-index: 1000;">
+</div>
+<div *ngIf="mascheraRinomina"
+    style="
+        padding: 3px;
+        position: absolute;
+        top: 35%;
+        left: 35%;
+        width: auto;
+        height: auto;
+        background-color: #f9ff9b;
+        border: 1px solid #999;
+        border-radius: 4px;
+        z-index: 1001;
+        box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+    ">
+    <h4>Rinomina {{tipologia}}</h4>
+    <hr />
+    <table style="width: 100%; min-width: 450px;" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                <span *ngIf="tipologia == 'Brano'" style="font-size: 18px; font-weight: bold;">Traccia</span>
+                <span *ngIf="tipologia == 'Album'" style="font-size: 18px; font-weight: bold;">Anno</span>
+                &nbsp;
+            </td>
+            <td>
+                <input style="font-size: 18px; width: 100%;" type="number" [(ngModel)]="nuovoNumero" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span style="font-size: 18px; font-weight: bold;">Nome</span>
+            </td>
+            <td>
+                <input style="font-size: 18px; width: 100%;" type="text" [(ngModel)]="nuovoNome" />
+            </td>
+        </tr>
+    </table>
+    <hr />
+    <div style="width: 100%; height: 35px;">
+        <div style="width: 50%; float: left; text-align: center;">
+            <!-- <img src="assets/immagini/icona_INDIETRO.png" style="cursor: pointer; width: 35px; height: 35px;" (click)="mascheraRinomina = false"> -->
+            &nbsp;
+        </div>
+        <div style="width: 50%; float: left; text-align: center;">
+            <img src="assets/immagini/icona_SALVA.png" style="cursor: pointer; width: 35px; height: 35px;" (click)="salvaRinomina()">
+        </div>
+    </div>
+
+    <div style="position: absolute; top: 0px; right: 1px;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraRinomina = false">
+    </div>
+</div>
+
+<!-- <div *ngIf="mascheraImmAlbum" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; background-color: #999; opacity: .5; z-index: 1000;">
+</div> -->
+<div *ngIf="mascheraImmAlbum"
+    style="
+        padding: 3px;
+        position: absolute;
+        top: 5%;
+        left: 5%;
+        width: 85%;
+        height: 85%;
+        background-color: #f9ff9b;
+        border: 1px solid #999;
+        border-radius: 4px;
+        z-index: 1001;
+        box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+        overflow-x: auto;
+    ">
+    <div style="width: auto; ">
+        <div *ngFor="let imm of immAlbum; index as k;" class="bottoncione">
+            <img [src]="imm.Path" style="cursor: pointer; width: 130px; height: 130px;" (click)="impostaImmagineAlbum(imm);">
+            <br />
+            Kb. {{imm.Dimensioni}}
+            <br />
+        </div>
+    </div>
+
+    <div style="position: absolute; top: 0px; right: 1px;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraImmAlbum = false; scaricamentoImmagine = false;">
+    </div>
+</div>

@@ -1,0 +1,137 @@
+mat-slider {
+  width: 100%;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(1.5); /* IE */
+  -moz-transform: scale(1.5); /* FF */
+  -webkit-transform: scale(1.5); /* Safari and Chrome */
+  -o-transform: scale(1.5); /* Opera */
+  transform: scale(1.5);
+  padding: 10px;
+}
+
+tr {
+  margin-top: 2px;
+}
+
+.bottoncione {
+  margin: 10px;
+  width: 130px; 
+  height: 100px; 
+  border: 1px solid #999; 
+  background-color: #ccc; 
+  border-radius: 4px;
+  float: left;
+  text-align: center;
+  cursor: pointer; 
+  -webkit-box-shadow: 0px 0px 12px 3px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 12px 3px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 12px 3px rgba(0,0,0,0.35);
+}
+
+.bottoncione:hover {
+  -webkit-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.35);
+  -moz-box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.35);
+  box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.35);
+  border: 1px solid white; 
+}
+
+.iconaDentro {
+  width: 130px;
+  height: 70px;
+}
+
+.barraDebug {
+  position: absolute; 
+  background-color: gray;
+  opacity: .65;
+  top: 45px; 
+  width: calc(75% - 10px); 
+  border: 1px solid #999;
+  border-radius: 3px; 
+  left: 5px; 
+  height: 27px; 
+  text-align: right; 
+  color: #ffee73;; 
+  z-index: 1001;
+}
+
+.downloadMask {
+  /* position: absolute;
+  z-index: 1003;
+  max-width: calc(100% - 10px);
+  top: 72px;
+  left: 5px; */
+  width: 50%;
+  float: left;
+  white-space: nowrap;
+  height: 27px;
+  background-color: burlywood; 
+  border: 1px solid #999;
+  border-radius: 3px; 
+  padding: 2px;
+  text-align: right; 
+  color: red;
+  opacity: .75;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nomeBrano {
+  width: 100%;
+  float: left;
+  border: 1px solid #464646;
+  border-radius: 3px; 
+  padding: 2px;
+  height: 27px;
+  opacity: .75;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #7eb2ff;
+}
+
+.successivoMask {
+  /* position: absolute;
+  max-width: calc(100% - 10px);
+  z-index: 1002;
+  top: 45px;
+  left: 5px; */
+  width: 50%;
+  float : left;
+  white-space: nowrap;
+  height: 27px;
+  background-color: #c8ffc5; 
+  border: 1px solid #999; 
+  border-radius: 3px; 
+  padding: 2px;
+  text-align: center; 
+  color: #027b0b;;
+  opacity: .75;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}

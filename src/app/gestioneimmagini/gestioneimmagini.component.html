@@ -1,0 +1,53 @@
+Immagini: {{immaginiArtista.length}}
+<hr />
+<div *ngFor="let immagine of immaginiArtista; index as i;" class="bottoncione">
+    <img [src]="immagine.Immagine" style="width: 100%; height: 100%;" (click)="premutaImmagine(immagine, $event, i)" />
+</div>
+
+<!-- <div *ngIf="visualizzaPopup" 
+    style="position: absolute; background-color: #fdfd5e; padding: 3px; width: auto; height: auto; border: 1px solid #999;"
+    [style.left.px]="popupLeft" [style.top.px]="popupTop">
+    {{testoImmagine}}
+    <br />
+</div> -->
+
+<div
+*ngIf="visualizzaImmagine == true"
+ style="
+  position: absolute;
+  background-color: white;
+  left: 5%;
+  top: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 5px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 22px 6px rgba(0,0,0,0.75);
+  text-align: center;
+  z-index: 1002;
+">
+    <div style="width: 100%; height: 40px; border-bottom: 1px solid #999;">
+        <div style="width: calc(100% - 150px); height: 40px; float: left; text-align: left;">
+            <div style="float: left; width: 30px; text-align: center;">
+                <img src="assets/immagini/icona_INDIETRO.png" title="Indietro" style="cursor: pointer; width: 25px; height: 25px;" (click)="indietroImmagine()">
+            </div>
+            <div style="float: left; width: calc(100% - 60px); text-align: center; height: 35px; overflow: auto;">
+                <h5>{{testoImmagine}}</h5>
+            </div>
+            <div style="float: left; width: 30px; text-align: center;">
+                <img src="assets/immagini/icona_AVANTI.png" title="Avanti" style="cursor: pointer; width: 25px; height: 25px;" (click)="avantiImmagine()">
+            </div>
+        </div>
+        <div style="width: 150px; height: 40px; float: left; text-align: right; padding-right: 30px;">
+            <img src="assets/immagini/icona_ELIMINA-TAG.png" title="Elimina Immagine" style="cursor: pointer; width: 25px; height: 25px;" (click)="eliminaImmagine()">
+            <img src="assets/immagini/icona_DOWNLOAD-TAG.png" title="Scarica Immagine" style="cursor: pointer; width: 25px; height: 25px;" (click)="scaricaImmagine()">
+        </div>
+    </div>
+    <div [ngStyle]="{'background-image': getUrl()}" style="width: 100%; height: calc(100% - 40px); background-repeat: no-repeat; background-size: contain; background-position: center;" ></div>
+
+    <div style="position: absolute; top: 0px; right: 1px;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="visualizzaImmagine = false">
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div *ngIf="mascheraVisibile == true" 
+  style="z-index: 2000; left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; background-color: black; opacity: .65;">
+</div>
+
+<div *ngIf="mascheraVisibile" 
+    class="finestra"
+>
+    <h5>Upload Brani</h5>
+    <hr />
+    <label for="file">Scelta File</label>
+    <input type="file"
+       id="file"
+       multiple
+       (change)="appoggiaFiles($event.target.files)">
+    <hr />
+
+    <div style="width: 100%;">
+        <div style="width: 80%; float: left; text-align: left; ">
+            <input type="checkbox" [checked]="effettuaRefreshBrani == true" (click)="cambioRefreshBrani($event)" /> &nbsp;
+            <span style="font-size: 15px; color: blue;">Effettua refresh brani</span>
+        </div>
+        <div style="width: 20%; float: left; text-align: right;">
+            <button mat-raised-button color="primary" (click)="handleFileInput()">Esegui</button>
+        </div>
+    </div>
+
+    <div style="position: absolute; top: 0px; right: 1px;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraVisibile = false; fChiusuraMaschera();">
+    </div>
+</div>
+
+<div *ngIf="mascheraVisibile == true && attendiUpload == true"
+    class="finestra"
+    style="padding: 10px; width: 40%; height: auto; text-align: center; z-index: 2001; background-color: #fdf7b0;"
+>
+    Attendere prego... <br />
+    Caricamento in corso...<hr />
+    Caricamento brano {{ qualeFile + 1 }}/{{ fileCount }}
+</div>
+
+<div *ngIf="mascheraVisibile == true && visuaLog == true"
+    class="finestra"
+    style="padding: 10px;
+        width: 80%;
+        height: 80%;
+        left: 10%;
+        top: 10%;
+        text-align: center;
+        z-index: 2002;
+        background-color: #fffeef;
+        white-space: pre;
+        text-align: left;
+        overflow: auto;"
+    [innerHtml]="contenutoLog"
+    >
+
+</div>
+
+<div *ngIf="mascheraVisibile == true && visuaLog == true" style="position: absolute; top: 0px; right: 1px; z-index: 2001;">
+    <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="chiudeLog()">
+</div>

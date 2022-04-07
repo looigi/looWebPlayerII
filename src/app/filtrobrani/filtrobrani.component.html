@@ -1,0 +1,183 @@
+<!-- FILTRO BRANI -->
+<div id="divFiltroBrani" *ngIf="mascheraFiltroBrani" ngDraggable [handle]="handleFiltro"
+  [style.right] ="mascheraOpzioni == true && mascheraTesto == true ? 'calc(25% + 259px)' : 
+                  mascheraOpzioni == true && mascheraTesto == false ? '259px' : 
+                  mascheraOpzioni == false && mascheraTesto == true ? 'calc(25% + 5px)' :
+                  mascheraOpzioni == false && mascheraTesto == false ? '3px' : '3px'"
+  style="position: absolute; top: 55px; height: auto; padding: 8px; width: 50%; 
+        box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+        background-color: rgb(36 34 34); z-index: 10; border: 1px solid rgb(78 75 74); opacity: .85; border-radius: 5px;
+        overflow: auto; max-width: 250px;"
+  (click)="tt.settaZIndex(2)"
+  >
+  <!-- <img src="assets/immagini/icona_INDIETRO.png" style="position: absolute; right: 0px; top: 0px; z-index: 99;" (click)="playlistVisibile = false"> -->
+
+  <div style="width: 100%; height: auto;">
+    <div style="width: 100%; text-align: left;">
+      <h5 *ngIf="fFiles.filesInMemoria && deviceGirante === 'Android'" style="color: greenyellow;">Brani su SD {{fFiles.filesInMemoria.length}}</h5>
+      <h5 *ngIf="braniFiltrati" style="color: #c7bd1e;">Brani in lista {{quantiBraniFiltrati}}</h5>
+    </div>
+
+    <div style="width: 40%; float: left; margin-top: 3px;">
+      <span style="color: white">Filtro</span>
+    </div>
+    <div style="width: 60%; float: left; margin-top: 1px; text-align: right;">
+      <div style="width: 100%">
+        <div style="width: 25px; float: left; text-align: left;">
+          <img title="Elimina filtro" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="cambiaFiltro('')" style="cursor: pointer; width: 20px; height: 20px;">
+        </div>
+        <div style="width: calc(100% - 50px); float: left;">
+          <input type="text" [value]="filtroImpostato" style="width: 100%" (input)="filtroImpostato = $event.target.value">
+        </div>
+        <div style="width: 25px; float: left; text-align: right;">
+          <img title="Imposta filtro" src="assets/immagini/icona_CERCA.png" (click)="cambiaFiltro(filtroImpostato)" style="cursor: pointer; width: 20px; height: 20px;">
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 40%; float: left; margin-top: 3px;">
+      <span style="color: white">Esclusioni</span>
+    </div>
+    <div style="width: 60%; float: left; margin-top: 1px; text-align: left;">
+      <div style="width: 100%">
+        <div style="width: 25px; float: left; text-align: left;">
+          <img title="Elimina esclusione" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="cambiaEsclusioni('')" style="cursor: pointer; width: 20px; height: 20px;">
+        </div>
+        <div style="width: calc(100% - 50px); float: left;">
+          <input type="text" [value]="esclusioni"  style="width: 100%;" (input)="esclusioni = $event.target.value">
+        </div>
+        <div style="width: 25px; float: left; text-align: right;">
+          <img title="Imposta esclusione" src="assets/immagini/icona_CERCA.png" (click)="cambiaEsclusioni(esclusioni)" style="cursor: pointer; width: 20px; height: 20px;">
+        </div>
+      </div>
+    </div>
+    
+    <div style="width: 40%; float: left; margin-top: 3px;">
+      <span style="color: white">Tags</span>&nbsp;
+      <img title="Aggiunge tag" src="assets/immagini/icona_CERCA.png" (click)="aggiungeTagRicerca()" style="cursor: pointer; width: 20px; height: 20px;">
+    </div>
+    <div *ngIf="tags" style="width: 60%; float: left; margin-top: 1px; text-align: right; ">
+      <div *ngFor="let tag of tags" 
+        style="width: auto; height: 18px; float: left; padding: 2px; margin: 1px; 
+          border: 1px solid #999; color: #264e2a; font-size: 14px;
+          background-color: #6fd872; border-radius: 2px;">
+        <div style="width: 100%; float: left; height: 18px;">
+          <div style="width: calc(100% - 25px); float: left; margin-top: -5px; white-space: nowrap;">
+            {{tag}}
+          </div>
+          <div style="width: 25px; float: left; margin-top: -6px;">
+            <img title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTag(tag)" style="cursor: pointer; width: 15px; height: 15px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="eliminaMamma == false && canzoniLocali == false" style="width: 100%; float: left; white-space: nowrap;">
+      <input type="checkbox" [checked]="canzoniMamma == true" (change)="storage.checkCanzoniMamma(tt, $event)" /> &nbsp;
+      <span style="font-size: 15px; color: white">Solo c. mamma</span>
+    </div>
+    <div *ngIf="canzoniMamma == false && canzoniLocali == false" style="width: 100%; float: left; white-space: nowrap;">
+      <input type="checkbox" [checked]="eliminaMamma == true" (change)="storage.checkEliminaMamma(tt, $event)" /> &nbsp;
+      <span style="font-size: 15px; color: white;">Elimina c. mamma</span>
+    </div>
+    <div *ngIf="deviceGirante == 'Android' && canzoniMamma == false" style="width: 100%; float: left; white-space: nowrap;">
+      <input *ngIf="isConnected" type="checkbox" [checked]="canzoniLocali == true" (change)="storage.checkSoloCanzoniLocali(tt, $event)" /> &nbsp;
+      <span style="font-size: 15px; color: white;">Solo canzoni locali</span>
+    </div>
+    <div *ngIf="canzoniLocali == false" style="width: 100%; float: left;">
+      <div style="width: 70%; float: left; white-space: nowrap;">
+        <input type="checkbox" [checked]="consideraStelle == true" (change)="storage.checkConsideraStelle(tt, $event)" /> &nbsp;
+        <span style="font-size: 15px; color: white;">Stelle</span>
+      </div>
+      <div style="width: 30%; float: left; margin-top: -3px;">
+        <input *ngIf="consideraStelle == true && maiVotate == false" style="width: 100%;" type="number" min="1" max="10" [value]="numeroStelle" (input)="storage.cambiaStelle(tt, $event.target.value)">
+      </div>
+    </div>
+    <div *ngIf="isConnected == true" style="width: 100%; float: left; white-space: nowrap; margin-top: -3px;">
+      <input *ngIf="consideraStelle == true" type="checkbox" [checked]="maiVotate == true" (change)="storage.checkMaiVotate(tt, $event)" />&nbsp;&nbsp;
+      <span *ngIf="consideraStelle == true" style="font-size: 15px; color: white;">Mai Votate</span>
+    </div>
+  </div>
+  
+  <div style="position: absolute; top: 0px; right: 1px;">
+    <img #handleFiltro src="assets/immagini/move_window_logo.png" style="cursor: pointer; width: 25px; height: 25px;" title="Sposta finestra">
+    &nbsp;<img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mascheraFiltroBrani = false; storage.checkFiltroBrani(tt, false); mascheraFiltroBraniEmit.emit(false);">
+  </div>
+</div>
+<!-- FILTRO BRANI -->
+
+<!-- Finestra tags -->
+<div *ngIf="mostraAggiungeTag == true" 
+  style="box-shadow: rgb(0 0 0 / 75%) 0px 0px 24px 2px;
+      position: absolute;
+      width: auto;
+      max-width: 30%;
+      height: auto;
+      z-index: 9999;
+      left: 30%;
+      max-height: 80%;
+      top: 20%;
+      padding: 5px;
+      overflow: hidden;
+      background-color: white;
+      border-radius: 3px;
+      min-width: 150px;
+      border: 1px solid #999;
+      text-align: center;">
+
+    <div style="width: 100%; max-height: 400px; overflow: auto; margin-top: 20px;">
+      <table *ngIf="listaTagsVisualizzati" style="width: 100%;" cellapdding="0px" cellspacing="0px">
+        <tr>
+          <th>
+          </th>
+          <th>
+          </th>
+          <th>
+            ID
+          </th>
+          <th>
+            Tag
+          </th>
+        </tr>
+        <tr *ngFor="let tag of listaTagsVisualizzati; index as j;">
+          <td>
+            <img title="Seleziona tag" src="assets/immagini/matitadx.png" (click)="selezionaTag(tag.idTag, tag.Tag)" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+          <td>
+            <img title="Elimina tag" src="assets/immagini/icona_ELIMINA-TAG.png" (click)="eliminaTagDaLista(tag.idTag)" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+          <td>
+            {{tag.idTag}}
+          </td>
+          <td>
+            {{tag.Tag}}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4"><hr /></td>
+        </tr>
+        <tr style="text-align: left;">
+          <td colspan="1">
+            <span style="font-weight: bold;">Tag</span>
+          </td>
+          <td colspan="3">
+            <input type="text" [(ngModel)]="nuovoTag" style="width: 100%; min-width: 250px;">
+          </td>
+        </tr>
+        <tr style="text-align: left;">
+          <td colspan="4">
+            <img title="Aggiungi tag" src="assets/immagini/icona_SALVA.png" (click)="aggiungeTagALista()" style="cursor: pointer; width: 25px; height: 25px;">
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="position: absolute; top: 0px; left: 0px; width: 100%;">
+      <div style="width: calc(100% - 30px); float: left; font-weight: bold;">
+        Lista Tags
+      </div>
+      <div style="width: 30px; float: left; text-align: right;">
+        <img src="assets/immagini/elimina_quadrato.png" style="cursor: pointer; width: 25px; height: 25px;" (click)="mostraAggiungeTag = false">
+      </div>
+    </div>
+</div>

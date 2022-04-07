@@ -1,0 +1,12 @@
+.finestra {
+    position: fixed;
+    left: 40%;
+    top: 40%;
+    padding: 5px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: white;
+    /* transform: translateX(-50%);
+    transform: translateY(-50%); */
+    z-index: 2001;
+}
