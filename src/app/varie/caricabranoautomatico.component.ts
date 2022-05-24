@@ -347,6 +347,7 @@ export class CaricaBranoAutomaticoComponent implements OnInit, AfterViewInit, On
                     ComponentFile.percorsoFileSD = '';
                     t.file.downloadBrano(t, this.pathBrano, cartelletta, titolone).then((Ritorno) => {
                       if (Ritorno === 'OK') {
+                        this.utility.scriveDebug(this, 'Iposto numero prossimo brano: ' + this.numeroBrano);
                         t.caricatoProssimoBrano = this.numeroBrano;
                         t.utility.scriveDebug(t, 'Carico brano automatico. Effettuato download: ' + this.pathBrano);
                       } else {

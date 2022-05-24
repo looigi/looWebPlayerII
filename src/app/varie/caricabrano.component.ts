@@ -83,6 +83,7 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
     if (t.deviceGirante === 'Android' && t.caricatoProssimoBrano > -1) {
           t.utility.scriveDebug(t, 'Carico brano già caricato. Inizio');
           this.caricaBranoGiaCaricato(t);
+          this.utility.scriveDebug(this, 'Azzero prossimo brano 4');
           t.caricatoProssimoBrano = -1;
           return;
     }
@@ -477,6 +478,7 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
               ComponentFile.percorsoFileSD = t.pathBrano;
   
               t.utility.scriveDebug(t, 'Carico brano normale. Proseguo caricamento del brano in locale');
+              // return; // QUI
               this.prosegueCaricamento(t);
             });
           });
@@ -653,6 +655,7 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     t.caricamentoInCorso = true;
+    t.contaTimer = 0;
 
     if (t.deviceGirante !== 'Android') {
       let u = ComponentFile.percorsoFileSD; // encodeURIComponent(ComponentFile.percorsoFileSD);
@@ -693,12 +696,18 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
         t.utility.scriveDebug(t, 'Acquisizione brano Android: Rilasciato il vecchio');
 
         t.audioAndroid = this.media.create(ComponentFile.percorsoFileSD);
-        t.staLeggendoBrano = true;
+        // t.staLeggendoBrano = true;
+        t.branoTerminato = false;
 
         t.audioAndroid.onStatusUpdate.subscribe(status =>  {
-          if (t.staLeggendoBrano === true) {
-            t.utility.scriveDebug(t, 'Update: ' + status);          
+          t.utility.scriveDebug(t, 'Update: ' + status);          
 
+          // if (t.staLeggendoBrano === true) {
+            if (status === 4) {
+              if (t.durata > 1) {
+                t.branoTerminato = true;
+              }
+            }
             /* if (status === 1) {
               setTimeout(() => {
                 t.audioAndroid.play();
@@ -713,7 +722,7 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
                 }, 100);
               }
             } */
-          }
+          // }
         });
 
         t.audioAndroid.onSuccess.subscribe(() => 
@@ -832,6 +841,7 @@ export class CaricaBranoComponent implements OnInit, AfterViewInit, OnChanges {
             t.utility.scriveDebug(t, 'Errore nel caricamento del brano. Non riesco a ottenere le informazioni: ' + ComponentFile.percorsoFileSD);
             alert('Errore nell\'ottenere le informazioni del brano: ' + ComponentFile.percorsoFileSD);
 
+            this.utility.scriveDebug(this, 'Azzero prossimo brano 5');
             t.caricatoProssimoBrano = -1;
             t.titoloBranoAutomatico = '';
             t.scrollaTesto('txtTitoloBranoAutomatico', t.titoloBranoAutomatico, 0);

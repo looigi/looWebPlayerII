@@ -1,1 +1,3 @@
 https://capacitorjs.com/docs/guides/splash-screens-and-icons
+
+cordova-res android --skip-config --copy

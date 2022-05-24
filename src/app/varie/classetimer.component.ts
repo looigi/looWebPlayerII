@@ -20,7 +20,9 @@ export class ClasseTimer implements OnInit, OnDestroy {
 
     parto() {
         // this.backgroundMode.enable();
-        cordova.plugins.backgroundMode.enable();
+        if (this.formPrincipale.deviceGirante === 'Android') {
+            cordova.plugins.backgroundMode.enable();
+        }
 
         this.formPrincipale.utility.scriveDebug(this.formPrincipale, 'Faccio partire timer');
         this.fermaTimer = false;
@@ -35,7 +37,9 @@ export class ClasseTimer implements OnInit, OnDestroy {
     stoppaTimer() {
         this.fermaTimer = true;
 
-        cordova.plugins.backgroundMode.disable();
+        if (this.formPrincipale.deviceGirante === 'Android') {
+            cordova.plugins.backgroundMode.disable();
+        }
         // this.backgroundMode.disable();
     }
 

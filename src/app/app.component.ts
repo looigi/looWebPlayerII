@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   lunghezzaCampo = [0, 0];
 
   debug = false;
-  moadalitaLite = true;
+  // moadalitaLite = true;
   debuggone = '';
   debuggone2 = '';
   filtroImpostatoDebug = '';
@@ -293,6 +293,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   tagsRicerca;
 
   urlPerUpload;
+  branoTerminato = false;
 
   // public tt = this;
   // cuffie = new CuffieComponent();
@@ -633,6 +634,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (UtilityComponent.haEseguitoGiaIlCostruttore) {
       return;
     }
+
+    this.staAspettandoCaricamento = true;
 
     this.apiService.impostaThis(this, this.utility);
     this.storage.leggeSettaggi(this);
@@ -1308,10 +1311,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     // console.log("This is emitted as the thumb slides");
 
+    this.utility.scriveDebug(this, 'Spostamento: ' + event.value);
+
     if (this.deviceGirante !== 'Android') {
       this.audio.currentTime = event.value;
     } else {
-      this.audioAndroid.seekTo(event.value);
+      // this.audioAndroid.pause();
+      setTimeout(() => {
+        this.audioAndroid.seekTo(event.value);
+        this.posizioneBrano = event.value;
+      }, 10);
     }
     this.posizioneBrano = event.value;
     this.tempoPassato = this.converteTempo(this.posizioneBrano);
@@ -1335,9 +1344,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   startTimerScritte() {
-    if (this.moadalitaLite) {
+    /* if (this.moadalitaLite) {
       return;
-    }
+    } */
     
     if (this.intervalScritte) {
       clearInterval(this.intervalScritte);
@@ -1398,7 +1407,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.pauseTimer();
     } */
     this.scaricatoAutomaticamente = false;
-    this.caricatoProssimoBrano = -1;
+    // this.utility.scriveDebug(this, 'Azzero prossimo brano 1');
+    // this.caricatoProssimoBrano = -1;
     this.titoloBranoAutomatico = '';
     this.fFiles.operazioneSuFile = '';
 
@@ -1434,7 +1444,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.contaTimerOpacity = 0;
     }
     // console.log(this.posizioneBrano);
-    this.posizioneBrano++;
     // this.utility.scriveDebug(this, 'Posizione brano: ' + this.posizioneBrano + ' Durata: ' + this.tempoTotaleBrano);
 
     // this.utility.scriveDebug(this, 'Tick1: ' + this.posizioneBrano);
@@ -1443,6 +1452,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     // this.utility.scriveDebug(this, 'Tick2: ' + this.tempoPassato);
 
     if (this.deviceGirante !== 'Android') {
+      this.posizioneBrano = this.audio.currentTime;
+
       if ((this.audio.ended || this.posizioneBrano > this.tempoTotaleBrano) && this.impostatoBranoFinito === false) {
         // clearInterval(this.interval);
         this.impostatoBranoFinito = true;
@@ -1465,6 +1476,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     } else {
       // if (this.durata === -1) {
         if (this.audioAndroid) {
+          this.audioAndroid.getCurrentPosition().then((curpos) => {
+            this.posizioneBrano = curpos;
+          });
+
           const dur = this.audioAndroid.getDuration();
           // this.utility.scriveDebug(this, 'Tick. Durata: ' + dur + ' - ' + this.durata);
           if (dur > 0 && dur > this.durata) {
@@ -1479,15 +1494,16 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       // }
       
-      if (this.durata > -1) {
+      if (this.durata > 1) {
         if (this.posizioneBrano > 15 && this.tempoTotaleBrano > 75 && !this.scaricatoAutomaticamente && this.posizioneBrano < 25) {
           this.utility.scriveDebug(this, 'Start timer. Prendo prossimo brano in automatico');
           // Prende prossimo brano
           this.gestAndroid.scaricaProssimoBranoInAutomatico(this);
         }
   
-        if (this.posizioneBrano > this.tempoTotaleBrano && this.impostatoBranoFinito === false) {
-          // clearInterval(this.interval);
+        // if (this.posizioneBrano > this.tempoTotaleBrano && this.impostatoBranoFinito === false) {
+        if (this.branoTerminato === true) {
+            // clearInterval(this.interval);
           this.impostatoBranoFinito = true;
           this.utility.scriveDebug(this, 'Fine brano, carico il successivo');
           if (this.caricatoProssimoBrano > -1) {
@@ -1513,19 +1529,25 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.contaTimerOpacity === 5) {
       this.opacita = .05;
     }
-    // this.contaTimer++;
-    // if (this.contaTimer > 15) {
-    //   this.cambiaImmagine();
+
+    this.contaTimer++;
+    if (this.contaTimer > 15) {
+      this.contaTimer = 0;
+      this.startTimerImmagine();
       // console.log(this.immagineSfondo);
-    // }
+    }
   }
 
   startTimerImmagine() {
-    if (this.moadalitaLite === true) {
+    this.utility.scriveDebug(this, 'Cambio immagine. Modalita You Tube: ' + this.modalitaYouTube);
+
+    /* if (this.moadalitaLite === true) {
+      this.utility.scriveDebug(this, 'Esco per Moadlita Lite');
       return;
-    }
+    } */
 
     if (this.modalitaYouTube === 'S') {
+      this.utility.scriveDebug(this, 'Esco per Moadlita You Tube');
       return;
     }
 
@@ -1750,9 +1772,11 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   play(s) {
-   this.accendeOpacita();
+    this.utility.scriveDebug(this, 'Premuto play: ' + s);
 
-   if (s === false) {
+    this.accendeOpacita();
+
+    if (s === false) {
       this.staSuonando = false;
       if (this.deviceGirante !== 'Android') {
         if (this.audio) {
@@ -2105,7 +2129,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       });
     }
 
-    this.caricatoProssimoBrano = -1;
+    // this.utility.scriveDebug(this, 'Azzero prossimo brano 2');
+    // this.caricatoProssimoBrano = -1;
     
     this.utility.scriveDebug(this, 'Brano su SD: ' + this.branoPresenteSuSD);
 

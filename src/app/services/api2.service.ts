@@ -192,7 +192,8 @@ export class ApiService {
           }, 1000);
         } else {
           this.utility.scriveDebug(this.formPrincipale, 'ERRORE HTTP: 0 MALEDETTO. Tentativi esauriti');
-          this.formPrincipale.caricatoProssimoBrano = false;
+          this.utility.scriveDebug(this, 'Azzero prossimo brano 3');
+          this.formPrincipale.caricatoProssimoBrano = -1;
         }
       } else {
         this.utility.scriveDebug(this.formPrincipale, 'ERRORE HTTP: ' + JSON.stringify(res));
