@@ -6,6 +6,7 @@ import { UtilityComponent } from "./utility.component";
 export class CheckReteComponent implements OnInit, OnChanges {
   frmPrincipale;
   staLeggendo;
+  ultimaConnessione;
 
   constructor(
       public utility: UtilityComponent,
@@ -44,6 +45,14 @@ export class CheckReteComponent implements OnInit, OnChanges {
         this.staLeggendo = false;
         this.frmPrincipale.isConnected = false;
         this.apiService.impostaConnesso(false);
+
+        if (this.ultimaConnessione === undefined) {
+          this.ultimaConnessione = false;
+        } else {
+          if (this.ultimaConnessione !== this.frmPrincipale.isConnected) {
+            this.frmPrincipale.utility.gestisceConnessione(this.frmPrincipale, this.frmPrincipale.isConnected);
+          }
+        }
       }
     }, UtilityComponent.TimeOutConnessione);
     this.frmPrincipale.ritornoGet = this.apiService.checkRete(this, this.frmPrincipale.idUtenza)
@@ -63,6 +72,13 @@ export class CheckReteComponent implements OnInit, OnChanges {
             this.frmPrincipale.isConnected = false;
             this.apiService.impostaConnesso(false);
           }
-    });
+          if (this.ultimaConnessione === undefined) {
+            this.ultimaConnessione = this.frmPrincipale.isConnected;
+          } else {
+            if (this.ultimaConnessione !== this.frmPrincipale.isConnected) {
+              this.frmPrincipale.utility.gestisceConnessione(this.frmPrincipale, this.frmPrincipale.isConnected);
+            }
+          }
+      });
   }
 }

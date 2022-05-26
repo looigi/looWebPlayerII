@@ -392,38 +392,9 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.isConnected = isConnected;
       this.apiService.impostaConnesso(isConnected);
       this.utility.scriveDebug(this, 'Connessione internet:' + isConnected);
-      /* if (this.deviceGirante === 'Android') {
-        if (isConnected === false) {
-          this.utility.scriveDebug(this, 'Connessione internet mancante. Attivo brani locali');
-          this.lastCanzoniLocali = this.canzoniLocali;
-          this.lastConsideraStelle = this.consideraStelle;
-          this.lastMaiVotate = this.maiVotate;          
-          this.lastIsConnected = isConnected;
 
-          this.canzoniLocali = true;
-          this.consideraStelle = false;
-          this.maiVotate = false;
-          this.utility.filtraBrani(this);
-        } else {
-          if (this.canzoniLocali === undefined) {
-            this.utility.scriveDebug(this, 'Connessione internet attiva.');
-            this.canzoniLocali =  localStorage.getItem('CanzoniLocali') === 'S' ? true : false;
-            this.consideraStelle =  localStorage.getItem('ConsideraStelle') === 'S' ? true : false;
-            this.maiVotate =  localStorage.getItem('maiVotate') === 'S' ? true : false;
+      this.utility.gestisceConnessione(this, isConnected);
       
-            this.utility.filtraBrani(this);
-          } else {
-            if (this.lastIsConnected !== undefined) {
-              this.lastIsConnected = undefined;
-              this.utility.scriveDebug(this, 'Connessione internet attiva. Imposto ultimo canzoni locali');
-              this.canzoniLocali = this.lastCanzoniLocali;
-              this.consideraStelle = this.lastConsideraStelle;
-              this.maiVotate = this.lastMaiVotate;    
-              this.utility.filtraBrani(this);
-            }
-          }
-        }
-      } */
       if (this.isConnected) {  
         this.noInternetConnection=false;  
       } else {  

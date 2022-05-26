@@ -829,4 +829,49 @@ export class UtilityComponent implements OnInit {
     } */
     return t;
   }
+
+  gestisceConnessione(t, isConnected) {
+    t.utility.scriveDebug(t, 'Lettura Rete. Cambio stato connessione: ', isConnected, t.deviceGirante);
+
+    if (t.deviceGirante === 'Android') {
+      if (isConnected === false) {
+        t.utility.scriveDebug(t, 'Connessione internet mancante. Attivo brani locali');
+        t.lastCanzoniLocali = t.canzoniLocali;
+        t.lastConsideraStelle = t.consideraStelle;
+        t.lastMaiVotate = t.maiVotate;          
+        t.lastIsConnected = isConnected;
+
+        t.canzoniLocali = true;
+        t.consideraStelle = false;
+        t.maiVotate = false;
+        t.utility.filtraBrani(this);
+      } else {
+        if (t.canzoniLocali === undefined) {
+          t.utility.scriveDebug(this, 'Connessione internet attiva.');
+          t.canzoniLocali =  localStorage.getItem('CanzoniLocali') === 'S' ? true : false;
+          t.consideraStelle =  localStorage.getItem('ConsideraStelle') === 'S' ? true : false;
+          t.maiVotate =  localStorage.getItem('maiVotate') === 'S' ? true : false;
+    
+          t.utility.filtraBrani(this);
+        } else {
+          if (t.lastIsConnected !== undefined) {
+            t.lastIsConnected = undefined;
+            t.utility.scriveDebug(this, 'Connessione internet attiva. Imposto ultimo canzoni locali');
+            t.canzoniLocali = t.lastCanzoniLocali;
+            t.consideraStelle = t.lastConsideraStelle;
+            t.maiVotate = t.lastMaiVotate;    
+            t.utility.filtraBrani(this);
+          } else {
+            t.utility.scriveDebug(this, 'Connessione internet attiva ma non c\'è il last connected');
+            t.lastIsConnected = undefined;
+            t.canzoniLocali = false;
+            t.consideraStelle = true;
+            t.maiVotate = false;
+            t.utility.filtraBrani(this);
+          }
+        }
+      }
+    }
+
+  }
 }
