@@ -1393,7 +1393,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /* startTimer() {
-    this.utility.scriveDebug(this, 'Start Timer. Inizio');
+    this.utility.scriveDebug(this, 'Timer Tick. Inizio');
     this.accendeOpacita();
 
     if (this.interval) {
@@ -1428,7 +1428,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       if ((this.audio.ended || this.posizioneBrano > this.tempoTotaleBrano) && this.impostatoBranoFinito === false) {
         // clearInterval(this.interval);
         this.impostatoBranoFinito = true;
-        this.utility.scriveDebug(this, 'Fine brano, carico il successivo');
+        this.utility.scriveDebug(this, 'Timer Tick. Fine brano, carico il successivo');
         if (this.caricatoProssimoBrano > -1) {
           this.numeroBrano = this.caricatoProssimoBrano;
         } else {
@@ -1441,7 +1441,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.numeroBrano > 0) {
           this.caricaBrano.caricaBrano(this);
 
-          this.utility.scriveDebug(this, 'Fine brano, caricato il successivo: ' + this.numeroBrano);
+          this.utility.scriveDebug(this, 'Timer Tick. Fine brano, caricato il successivo: ' + this.numeroBrano);
         }
       }
     } else {
@@ -1456,7 +1456,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (dur > 0 && dur > this.durata) {
             // setTimeout(() => {
               this.durata = dur;
-              this.utility.scriveDebug(this, 'Arrivata durata brano:' + this.durata);
+              this.utility.scriveDebug(this, 'Timer Tick. Arrivata durata brano:' + this.durata);
               this.tempoTotaleBrano = this.durata;
               this.tempoTotale = this.converteTempo(this.durata);
               // this.utility.scriveDebug(this, 'Conversione durata brano:' + this.tempoTotale);
@@ -1465,9 +1465,14 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       // }
       
-      if (this.durata > 1) {
-        if (this.posizioneBrano > 15 && this.tempoTotaleBrano > 75 && !this.scaricatoAutomaticamente && this.posizioneBrano < 25) {
-          this.utility.scriveDebug(this, 'Start timer. Prendo prossimo brano in automatico');
+      // if (this.durata > 1 || this.branoTerminato === true) {
+        if (this.posizioneBrano > 15 && !this.scaricatoAutomaticamente) {
+          this.utility.scriveDebug(this, 'Timer Tick. Vedo se posso prendere prossimo brano in automatico:' + this.posizioneBrano + ' - ' + this.scaricatoAutomaticamente + ' - ' + this.branoTerminato);
+        }
+
+        // if (this.posizioneBrano > 15 && this.tempoTotaleBrano > 75 && !this.scaricatoAutomaticamente && this.posizioneBrano < 25 && this.branoTerminato !== true) {
+        if (this.posizioneBrano > 15 && !this.scaricatoAutomaticamente && !this.branoTerminato) {
+          this.utility.scriveDebug(this, 'Timer Tick. Prendo prossimo brano in automatico');
           // Prende prossimo brano
           this.gestAndroid.scaricaProssimoBranoInAutomatico(this);
         }
@@ -1476,7 +1481,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         if (this.branoTerminato === true) {
             // clearInterval(this.interval);
           this.impostatoBranoFinito = true;
-          this.utility.scriveDebug(this, 'Fine brano, carico il successivo');
+          this.branoTerminato = false;
+          this.utility.scriveDebug(this, 'Timer Tick. Fine brano, carico il successivo');
           if (this.caricatoProssimoBrano > -1) {
             this.numeroBrano = this.caricatoProssimoBrano;
           } else {
@@ -1489,10 +1495,10 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (this.numeroBrano > 0) {
             this.caricaBrano.caricaBrano(this);
 
-            this.utility.scriveDebug(this, 'Fine brano, caricato il successivo: ' + this.numeroBrano);
+            this.utility.scriveDebug(this, 'Timer Tick. Fine brano, caricato il successivo: ' + this.numeroBrano);
           }
         }
-      }
+      // }
       // this.utility.scriveDebug(this, 'Tick. Uscita');
     }
 
@@ -1503,6 +1509,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     this.contaTimer++;
     if (this.contaTimer > 15) {
+      this.utility.scriveDebug(this, 'Timer Tick. Cambio immagine');
       this.contaTimer = 0;
       this.startTimerImmagine();
       // console.log(this.immagineSfondo);
